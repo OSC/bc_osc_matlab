@@ -1,0 +1,11 @@
+title: 'Matlab'
+compute:
+  - &matlab
+    name: 'Matlab'
+    batch: 'owens'
+    node: &software_nodes
+      - type: 'any'
+        ppn: 28
+        desc: >
+          Choose any type of compute node. This reduces the wait time
+          as there are no node specific requirements.

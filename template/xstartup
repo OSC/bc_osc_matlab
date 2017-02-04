@@ -1,0 +1,16 @@
+#!/bin/bash -l
+
+# Launch FVWM
+FVWM_ASSETS_ROOT="${ROOT}/bc_fvwm_assets/template"
+FVWM_ROOT="${FVWM_ASSETS_ROOT}" "${FVWM_ASSETS_ROOT}/fvwm_wrapper" -f "${ROOT}/fvwm/fvwmrc" &
+
+# Load the Matlab module
+module load matlab
+
+#
+# Start Matlab
+#
+matlab -desktop
+
+# Kill vncserver when user closes GUI
+vncserver -kill ${DISPLAY}

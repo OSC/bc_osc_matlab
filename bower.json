@@ -1,0 +1,21 @@
+{
+  "name": "bc_osc_matlab",
+  "homepage": "https://github.com/OSC/bc_osc_matlab",
+  "authors": [
+    "Jeremy Nicklas <bgohar@osc.edu>"
+  ],
+  "description": "Batch Connect - OSC Matlab",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bc_fvwm_assets": "git://github.com/OSC/bc_fvwm_assets.git#0.0.x"
+  }
+}
