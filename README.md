@@ -1,7 +1,7 @@
 # Batch Connect - OSC Matlab
 
-![GitHub Release](https://img.shields.io/github/release/osc/bc_osc_abaqus.svg)
-![GitHub License](https://img.shields.io/github/license/osc/bc_osc_abaqus.svg)
+![GitHub Release](https://img.shields.io/github/release/osc/bc_osc_matlab.svg)
+![GitHub License](https://img.shields.io/github/license/osc/bc_osc_matlab.svg)
 
 A VNCSim app designed for OSC OnDemand that launches Matlab within an Owens
 batch job.
@@ -11,7 +11,7 @@ batch job.
 1. Git clone this app in the desired location and go into the directory:
 
   ```sh
-  git clone <repo> bc_osc_abaqus
+  git clone <repo> bc_osc_matlab
 
   cd bc_osc_matlab
   ```
