@@ -1,11 +1,13 @@
-title: 'Matlab'
+title: 'MATLAB'
 compute:
-  - &matlab
-    name: 'Matlab'
+  - name: 'MATLAB R2016b'
     batch: 'owens'
-    node: &software_nodes
+    node:
       - type: 'any'
         ppn: 28
         desc: >
           Choose any type of compute node. This reduces the wait time
           as there are no node specific requirements.
+    pbs:
+      envvars:
+        MATLAB_MODULE: 'matlab/r2016b'

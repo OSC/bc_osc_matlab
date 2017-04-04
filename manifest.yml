@@ -1,8 +1,8 @@
 ---
-name: Matlab
+name: MATLAB
 description: |-
-  **Matlab** provides access to the Matlab GUI on one or more compute nodes
-  on the Owens cluster at the Ohio Supercomputer Center (OSC).
+  **MATLAB** provides access to the MATLAB GUI on one or more compute nodes on
+  the Owens cluster at the Ohio Supercomputer Center (OSC).
 category: Desktop Apps
 subcategory: Interactive HPC
 role: ihpc

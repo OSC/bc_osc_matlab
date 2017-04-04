@@ -2,9 +2,10 @@
   "name": "bc_osc_matlab",
   "homepage": "https://github.com/OSC/bc_osc_matlab",
   "authors": [
-    "Jeremy Nicklas <bgohar@osc.edu>"
+    "Jeremy Nicklas <jnicklas@osc.edu>",
+    "Basil Gohar <bgohar@osc.edu>"
   ],
-  "description": "Batch Connect - OSC Matlab",
+  "description": "Batch Connect - OSC MATLAB",
   "main": "",
   "license": "MIT",
   "private": true,
