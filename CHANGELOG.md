@@ -1,11 +1,5 @@
 ## Unreleased
 
-## 0.0.2 (2017-01-10)
-
-Features:
-
-  - added more versions of Abaqus
-
-## 0.0.1 (2016-12-20)
+## 0.0.1 (2017-04-04)
 
 Initial release!
