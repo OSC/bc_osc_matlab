@@ -22,18 +22,10 @@ batch job.
    git checkout <tag>
    ```
 
-2. This app requires the
-   [bc_fvwm_assets](https://github.com/OSC/bc_fvwm_assets) Bower asset, so we
-   will need a local copy of Bower:
+3. Setup the app for use:
 
    ```sh
-   npm install bower
-   ```
-
-3. Install the Bower asset:
-
-   ```sh
-   node_modules/.bin/bower install
+   bin/setup
    ```
 
 ## Update
@@ -50,10 +42,10 @@ batch job.
    git checkout <tag>
    ```
 
-3. Update the Bower assets:
+3. Setup the app for use:
 
    ```sh
-   node_modules/.bin/bower update --force
+   bin/setup
    ```
 
 ## Specification
