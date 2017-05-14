@@ -6,6 +6,20 @@
 A VNCSim app designed for OSC OnDemand that launches MATLAB within an Owens
 batch job.
 
+## Prerequisites
+
+This app requires the following software be installed on the nodes that the
+batch job is intended to run on:
+
+- [MATLAB](https://www.mathworks.com/) R2016b+
+- [Lmod](https://www.tacc.utexas.edu/research-development/tacc-projects/lmod) 6.0.1+
+- [Fluxbox](http://fluxbox.org/) 1.1.1+
+
+For VNC server support:
+
+- [TurboVNC](http://www.turbovnc.org/) 2.1+
+- [noVNC](https://github.com/novnc/noVNC) 0.6.2+
+
 ## Install
 
 Use git to clone this app and checkout the desired branch/version you want to
@@ -30,16 +44,6 @@ git checkout <tag/branch>
 ```
 
 Again, you do not need to restart the app as it isn't a Passenger app.
-
-For **development** you will need to use
-[bower](https://www.npmjs.com/package/bower) to update the assets for this app:
-
-```sh
-bower install
-bower prune
-```
-
-followed by versioning them if they have changed.
 
 ## Specification
 
