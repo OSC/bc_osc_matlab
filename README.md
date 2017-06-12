@@ -3,8 +3,8 @@
 ![GitHub Release](https://img.shields.io/github/release/osc/bc_osc_matlab.svg)
 ![GitHub License](https://img.shields.io/github/license/osc/bc_osc_matlab.svg)
 
-A VNCSim app designed for OSC OnDemand that launches MATLAB within an Owens
-batch job.
+A Batch Connect app designed for OSC OnDemand that launches MATLAB within an
+Owens batch job.
 
 ## Prerequisites
 
@@ -18,7 +18,7 @@ batch job is intended to run on:
 For VNC server support:
 
 - [TurboVNC](http://www.turbovnc.org/) 2.1+
-- [noVNC](https://github.com/novnc/noVNC) 0.6.2+
+- [websockify](https://github.com/novnc/websockify) 0.8.0+
 
 ## Install
 
@@ -26,9 +26,9 @@ Use git to clone this app and checkout the desired branch/version you want to
 use:
 
 ```sh
-git clone <repo>
+scl enable git19 -- git clone <repo>
 cd <dir>
-git checkout <tag/branch>
+scl enable git19 -- git checkout <tag/branch>
 ```
 
 You will not need to do anything beyond this as all necessary assets are
@@ -39,32 +39,15 @@ To update the app you would:
 
 ```sh
 cd <dir>
-git fetch
-git checkout <tag/branch>
+scl enable git19 -- git fetch
+scl enable git19 -- git checkout <tag/branch>
 ```
 
 Again, you do not need to restart the app as it isn't a Passenger app.
 
-## Specification
-
-### ROOT
-
-All assets in this package look for dependencies in the specified `$ROOT`
-directory. This should be set to correspond to the included `template/`
-directory.
-
-An example running the `xstartup` script included in this package:
-
-```sh
-# Path where you installed this project
-BC_OSC_MATLAB_DIR="/path/to/bc_osc_matlab/template"
-
-# Run the `xstartup` script with proper `$ROOT` set
-ROOT="${BC_OSC_MATLAB_DIR}" ${BC_OSC_MATLAB_DIR}/xstartup
-```
+## Template Specification
 
 ### MATLAB_MODULE
-
 
 This environment variable describes the specific MATLAB version to load. This
 also assumes module support through the
