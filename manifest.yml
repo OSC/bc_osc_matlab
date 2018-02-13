@@ -3,3 +3,7 @@ name: MATLAB
 category: Interactive Apps
 subcategory: GUIs
 role: batch_connect
+description: |
+  This app will launch a [MATLAB](https://www.mathworks.com/products/matlab.html) GUI on one 
+  or more [Owens nodes](https://www.osc.edu/resources/technical_support/supercomputers/owens). 
+  You will be able to interact with MATLAB through a VNC session.
