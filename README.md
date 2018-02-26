@@ -27,7 +27,7 @@ For hardware rendering support:
 
 **Optional** software:
 
-- [Lmod] 6.0.1+ or any other `module restore` and `module load <modules>` based
+- [Lmod] 6.0.1+ or any other `module purge` and `module load <modules>` based
   CLI used to load appropriate environments within the batch job
 
 [MATLAB]: https://www.mathworks.com/
