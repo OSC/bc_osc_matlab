@@ -32,9 +32,7 @@ until fluxbox -display "${DISPLAY}.0" -rc "<%= session.staged_root.join("fluxbox
 #
 
 # Load the required environment
-OLD_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
-module load matlab/r2016b
-LD_LIBRARY_PATH="${OLD_LD_LIBRARY_PATH}"
+module load <%= context.version %>
 
 # Launch MATLAB
 <%- if gpu -%>

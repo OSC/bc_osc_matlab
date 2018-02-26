@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Added
+- Added MATLAB versions R2017a and R2015b.
 - Added hardware rendering support.
   [#3](https://github.com/OSC/bc_osc_matlab/issues/3)
 
