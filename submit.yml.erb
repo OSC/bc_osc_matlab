@@ -1,10 +1,7 @@
 ---
 batch_connect:
   template: vnc
-
 script:
-  job_environment:
-    MATLAB_MODULE: "matlab/r2016b"
   native:
     resources:
-      nodes: "<%= bc_num_slots %><%= node_type %>"
+      nodes: "<%= bc_num_slots.blank? ? "1" : bc_num_slots.to_i %><%= node_type %>"
