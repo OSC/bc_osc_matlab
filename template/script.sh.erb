@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+<%- gpu = context.node_type.include?("vis") -%>
+
+# Clean the environment
+module purge
+
+# Set working directory to home directory
+cd "${HOME}"
+
+#
+# Launch Fluxbox
+#
+
+# Create Fluxbox root or it will override the below init file
+(
+  umask 077
+  mkdir -p "${HOME}/.fluxbox"
+)
+
+# Start the Fluxbox window manager (it likes to crash on occassion, make it
+# persistent)
+(
+until fluxbox -display "${DISPLAY}.0" -rc "<%= session.staged_root.join("fluxbox.rc") %>"; do
+    echo "Fluxbox crashed with exit code $?. Respawning..." >&2
+    sleep 1
+  done
+) &
+
+#
+# Start MATLAB
+#
+
+# Load the required environment
+OLD_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}"
+module load matlab/r2016b
+LD_LIBRARY_PATH="${OLD_LD_LIBRARY_PATH}"
+
+# Launch MATLAB
+<%- if gpu -%>
+module load intel/16.0.3 virtualgl
+vglrun matlab -desktop -nosoftwareopengl
+<%- else -%>
+matlab -desktop
+<%- end -%>

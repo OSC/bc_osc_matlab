@@ -1,24 +1,42 @@
 # Batch Connect - OSC MATLAB
 
 ![GitHub Release](https://img.shields.io/github/release/osc/bc_osc_matlab.svg)
-![GitHub License](https://img.shields.io/github/license/osc/bc_osc_matlab.svg)
+[![GitHub License](https://img.shields.io/badge/license-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 A Batch Connect app designed for OSC OnDemand that launches MATLAB within an
 Owens batch job.
 
 ## Prerequisites
 
-This app requires the following software be installed on the nodes that the
-batch job is intended to run on:
+This Batch Connect app requires the following software be installed on the
+**compute nodes** that the batch job is intended to run on (**NOT** the
+OnDemand node):
 
-- [MATLAB](https://www.mathworks.com/) R2016b+
-- [Lmod](https://www.tacc.utexas.edu/research-development/tacc-projects/lmod) 6.0.1+
-- [Fluxbox](http://fluxbox.org/) 1.1.1+
+- [MATLAB] R2016b+
+- [Fluxbox] 1.1.1+
 
 For VNC server support:
 
-- [TurboVNC](http://www.turbovnc.org/) 2.1+
-- [websockify](https://github.com/novnc/websockify) 0.8.0+
+- [TurboVNC] 2.1+
+- [websockify] 0.8.0+
+
+For hardware rendering support:
+
+- [X server]
+- [VirtualGL] 2.3+
+
+**Optional** software:
+
+- [Lmod] 6.0.1+ or any other `module restore` and `module load <modules>` based
+  CLI used to load appropriate environments within the batch job
+
+[MATLAB]: https://www.mathworks.com/
+[Fluxbox]: http://fluxbox.org/
+[TurboVNC]: http://www.turbovnc.org/
+[websockify]: https://github.com/novnc/websockify
+[X server]: https://www.x.org/
+[VirtualGL]: http://www.virtualgl.org/
+[Lmod]: https://www.tacc.utexas.edu/research-development/tacc-projects/lmod
 
 ## Install
 
@@ -44,16 +62,6 @@ scl enable git19 -- git checkout <tag/branch>
 ```
 
 Again, you do not need to restart the app as it isn't a Passenger app.
-
-## Template Specification
-
-### MATLAB_MODULE
-
-This environment variable describes the specific MATLAB version to load. This
-also assumes module support through the
-[Lmod](https://www.tacc.utexas.edu/research-development/tacc-projects/lmod)
-package manager is installed on the running compute node as well as the
-requested module in `$MATLAB_MODULE`.
 
 ## Contributing
 
