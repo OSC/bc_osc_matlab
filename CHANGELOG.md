@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Switched from using Fluxbox to Xfce for the window manager.
 
+### Fixed
+- Fixed local configuration not always being ignored.
+
 ## [0.2.0] - 2018-02-26
 ### Added
 - Added MATLAB versions R2017a and R2015b.
