@@ -5,10 +5,22 @@ form:
   - bc_account
   - bc_num_hours
   - bc_num_slots
+  - num_cores
   - node_type
   - bc_vnc_resolution
   - bc_email_on_started
 attributes:
+  num_cores:
+    widget: "number_field"
+    label: "Number of cores"
+    value: 1
+    help: |
+      Number of cores on node type (4 GB per core unless requesting whole
+      node). Leave blank if requesting full node.
+    min: 1
+    max: 48
+    step: 1
+    id: 'num_cores'
   bc_num_slots: "1"
   bc_vnc_resolution:
     required: true
@@ -19,19 +31,19 @@ attributes:
     widget: select
     label: "Node type"
     help: |
-      - **any** - (*28 cores*) Use any available Owens node. This reduces the
+      - **any** - (*1-28 cores*) Use any available Owens node. This reduces the
         wait time as there are no node requirements.
       - **hugemem** - (*48 cores*) Use an Owens node that has 1.5TB of
         available RAM as well as 48 cores. There are 16 of these nodes on
-        Owens.
-      - **vis** - (*28 cores*) Use an Owens node that has an [NVIDIA Tesla P100
+        Owens. Requesting hugemem nodes allocates entire nodes.
+      - **vis** - (*1-28 cores*) Use an Owens node that has an [NVIDIA Tesla P100
         GPU](http://www.nvidia.com/object/tesla-p100.html) with an X server
         running in the background. This utilizes the GPU for hardware
         accelerated 3D visualization. There are 160 of these nodes on Owens.
     options:
-      - [ "any",     ":ppn=28"            ]
-      - [ "hugemem", ":ppn=48:hugemem"    ]
-      - [ "vis",     ":ppn=28:vis:gpus=1" ]
+      - [ "any",     ""            ]
+      - [ "hugemem", ":hugemem"    ]
+      - [ "vis",     ":vis:gpus=1" ]
   version:
     widget: select
     label: "MATLAB version"

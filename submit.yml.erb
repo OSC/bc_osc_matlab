@@ -1,7 +1,13 @@
+<%-
+ppn = num_cores.blank? ? 28 : num_cores.to_i
+if node_type == ':hugemem'
+  ppn = 48
+end
+%>
 ---
 batch_connect:
   template: vnc
 script:
   native:
     resources:
-      nodes: "<%= bc_num_slots.blank? ? "1" : bc_num_slots.to_i %><%= node_type %>"
+      nodes: "<%= bc_num_slots.blank? ? "1" : bc_num_slots.to_i %>:ppn=<%= ppn %><%= node_type %>"
