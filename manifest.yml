@@ -1,11 +1,11 @@
 ---
-name: MATLAB
+name: SAS
 category: Interactive Apps
 subcategory: GUIs
 role: batch_connect
 description: |
-  This app will launch a [MATLAB] GUI on the [Owens cluster]. You will be able
-  to interact with the MATLAB GUI through a VNC session.
+  This app will launch a [SAS] GUI on the [Cheaha cluster]. You will be able
+  to interact with the SAS GUI through a VNC session.
 
-  [MATLAB]: https://www.mathworks.com/products/matlab.html
-  [Owens cluster]: https://www.osc.edu/resources/technical_support/supercomputers/owens
+  [SAS]: https://www.sas.com/en_us/home.html 
+  [Cheaha cluster]: https://docs.uabgrid.uab.edu/wiki/Cheaha_GettingStarted

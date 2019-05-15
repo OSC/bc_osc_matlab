@@ -1,56 +1,40 @@
 ---
-cluster: "owens"
-form:
-  - version
-  - bc_account
-  - bc_num_hours
-  - bc_num_slots
-  - num_cores
-  - node_type
-  - bc_vnc_resolution
-  - bc_email_on_started
+cluster: "{{ cluster_name }}"
 attributes:
-  num_cores:
-    widget: "number_field"
-    label: "Number of cores"
+  bc_num_hours:
     value: 1
-    help: |
-      Number of cores on node type (4 GB per core unless requesting whole
-      node). Leave blank if requesting full node.
-    min: 0
-    max: 48
+
+  bc_num_slots:
+    label: Number of CPU
+    value: 1
+    min: 1
+    max: 24
     step: 1
-    id: 'num_cores'
-  bc_num_slots: "1"
-  bc_vnc_resolution:
-    required: true
-  bc_account:
-    label: "Project"
-    help: "You can leave this blank if **not** in multiple projects."
-  node_type:
+
+  bc_num_mems:
+    widget: "number_field"
+    label: Memory per CPU (GB)
+    value: 4
+    min: 1
+    max: 128
+    step: 1
+
+  bc_partition:
     widget: select
-    label: "Node type"
-    help: |
-      - **any** - (*1-28 cores*) Use any available Owens node. This reduces the
-        wait time as there are no node requirements.
-      - **hugemem** - (*48 cores*) Use an Owens node that has 1.5TB of
-        available RAM as well as 48 cores. There are 16 of these nodes on
-        Owens. Requesting hugemem nodes allocates entire nodes.
-      - **vis** - (*1-28 cores*) Use an Owens node that has an [NVIDIA Tesla P100
-        GPU](http://www.nvidia.com/object/tesla-p100.html) with an X server
-        running in the background. This utilizes the GPU for hardware
-        accelerated 3D visualization. There are 160 of these nodes on Owens.
+    label: Partition
     options:
-      - [ "any",     ""            ]
-      - [ "hugemem", ":hugemem"    ]
-      - [ "vis",     ":vis:gpus=1" ]
+      - [ "low", "low" ]
+
   version:
     widget: select
-    label: "MATLAB version"
-    help: "This defines the version of MATLAB you want to load."
+    label: "SAS version"
+    help: "This defines the version of SAS you want to load."
     options:
-      - [ "R2018b", "matlab/r2018b" ]
-      - [ "R2018a", "matlab/r2018a" ]
-      - [ "R2017a", "matlab/r2017a" ]
-      - [ "R2016b", "matlab/r2016b" ]
-      - [ "R2015b", "matlab/r2015b" ]
+      - [ "v9.4", "sas/v9.4" ]
+form:
+  - version
+  - bc_num_hours
+  - bc_partition
+  - bc_num_slots
+  - bc_num_mems
+  - bc_email_on_started
