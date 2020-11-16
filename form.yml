@@ -1,5 +1,7 @@
 ---
-cluster: "owens"
+cluster:
+- "owens"
+- "owens-slurm"
 form:
   - version
   - bc_account
@@ -41,9 +43,9 @@ attributes:
         running in the background. This utilizes the GPU for hardware
         accelerated 3D visualization. There are 160 of these nodes on Owens.
     options:
-      - [ "any",     ""            ]
-      - [ "hugemem", ":hugemem"    ]
-      - [ "vis",     ":vis:gpus=1" ]
+      - "any"
+      - "hugemem"
+      - "vis"
   version:
     widget: select
     label: "MATLAB version"
