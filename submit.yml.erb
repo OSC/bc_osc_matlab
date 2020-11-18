@@ -1,13 +1,32 @@
 <%-
-ppn = num_cores.blank? ? 28 : num_cores.to_i
-if node_type == ':hugemem'
-  ppn = 48
-end
+  ppn = num_cores.blank? ? 28 : num_cores.to_i
+  nodes = bc_num_slots.blank? ? 1 : bc_num_slots.to_i
+  torque_cluster = OodAppkit.clusters[cluster].job_config[:adapter] == 'torque'
+
+  case node_type
+  when "hugemem"
+    ppn = 48
+    partition = bc_num_slots.to_i > 1 ? "hugemem-parallel" : "hugemem"
+    slurm_args = [ "--nodes", "#{nodes}", "--ntasks-per-node", "#{ppn}", "--partition", partition ]
+    torque_args = "#{nodes}:ppn=#{ppn}:#{node_type}"
+  when "vis"
+    slurm_args = ["--nodes", "#{nodes}", "--ntasks-per-node", "#{ppn}", "--gpus-per-node", "1", "--gres", "vis" ]
+    torque_args = "#{nodes}:ppn=#{ppn}:#{node_type}:gpus=1"
+  else
+    slurm_args = ["--nodes", "#{nodes}", "--ntasks-per-node", "#{ppn}" ]
+    torque_args = "#{nodes}:ppn=#{ppn}"
+  end
 %>
 ---
 batch_connect:
   template: vnc
 script:
   native:
+  <%- if torque_cluster %>
     resources:
-      nodes: "<%= bc_num_slots.blank? ? "1" : bc_num_slots.to_i %>:ppn=<%= ppn %><%= node_type %>"
+      nodes: "<%= torque_args %>"
+  <%- else %>
+  <%- slurm_args.each do |arg| %>
+    - "<%= arg %>"
+  <%- end %>
+  <%- end %>
