@@ -34,14 +34,9 @@ DESCRIPTION
 
 
 %install
-export PASSENGER_APP_ENV=production
-export PASSENGER_BASE_URI=/pun/sys/%{app_name}
 mkdir -p %{buildroot}%{_localstatedir}/www/ood/apps/sys/%{app_name}
-if [ -x bin/setup ]; then
-    bin/setup
-fi
 cp -a ./. %{buildroot}%{_localstatedir}/www/ood/apps/sys/%{app_name}/
-
+echo v%{version} > %{buildroot}%{_localstatedir}/www/ood/apps/sys/%{app_name}/VERSION
 
 %files
 %defattr(-,root,root)
