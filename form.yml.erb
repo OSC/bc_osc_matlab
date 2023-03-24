@@ -1,138 +1,135 @@
+# Batch Connect app configuration file
+#
+# @note Used to define the submitted cluster, title, description, and
 <%-
-  groups = OodSupport::User.new.groups.sort_by(&:id).tap { |groups|
-    groups.unshift(groups.delete(OodSupport::Process.group))
-  }.map(&:name).grep(/^P./)
+  cmd = "/usr/bin/sacctmgr show associations user=$USER -P -n format=account,qos"
+  begin
+    output, status = Open3.capture2e(cmd)
+    if status.success?
+      raw_data = output
+    else
+      raise output
+    end
+  rescue => e
+    qos = []
+    qerror = e.message.strip
+  end
 -%>
+
 ---
-cluster:
-  - "owens"
-  - "pitzer"
+
+cluster: "quests"
+
 form:
   - version
-  - account
-  - bc_num_hours
-  - bc_num_slots
-  - num_cores
-  - node_type
+  - vnc_resolution
   - bc_vnc_resolution
+  - job_name
+  - slurm_partition
+  - gres_value
+  - slurm_account
+  - num_cores
+  - number_of_nodes
+  - memory_per_node
+  - bc_num_hours
   - bc_email_on_started
+  - raw_data
+  - node_type
+
 attributes:
+  node_type: "CPU"
+
+  version:
+    widget: select
+    label: "Matlab version"
+    help: "This defines the version of Matlab you want to load."
+    options:
+      - [ "MATLAB-2018a", "matlab/r2018a" ]
+      - [ "MATLAB-2018b", "matlab/r2018b" ]
+      - [ "MATLAB-2020b", "matlab/r2020b" ]
+      - [ "MATLAB-2021b", "matlab/r2021b" ]
+      - [ "MATLAB-2022a", "matlab/r2022a" ]
+      - [ "MATLAB-2022b", "matlab/r2022b" ]
+
+  vnc_resolution:
+    label: "Resolution"
+    required: true
+    widget: "select"
+    value: "1280x1024"
+    options:
+      - ["2560x1600","2560x1600"]
+      - ["2560x1440","2560x1440"]
+      - ["1920x1200","1920x1200"]
+      - ["1920x1080","1920x1080"] 
+      - ["1600x1200","1600x1200"]
+      - ["1280x1024","1280x1024"]
+      - ["1280x960","1280x960"]  
+      - ["1024x768","1024x768"]
+      - ["800x600","800x600"]
+
+  bc_vnc_resolution:
+    required: true
+    value: "1280x1024"
+
+  job_name:
+    label: "Name of the Job"
+    value: "Matlab GUI"
+
+  bc_num_hours:
+    label: "Wall Clock Time"
+    help: "The maximum number of hours your Desktop session will run for."
+    value: 1
+
+  slurm_partition: 
+    label: "SLURM Partition"
+    help: "The SLURM partition in which you want to launch this Desktop session. Only savio2_htc is available at this time."
+    widget: select
+
+  slurm_account:
+    label: "SLURM Account/Project Name"
+    help: "The SLURM account (i.e., the value of the -A or --account flag used when submitting a SLURM job)."
+    widget: select
+
+  gres_values:
+    label: "Type of GPU that you would like to request"
+    help: "Options include gpu:a100:1"
+    widget: select
+
   num_cores:
     widget: "number_field"
     label: "Number of cores"
     value: 1
     help: |
-      Number of cores on node type (4 GB per core unless requesting whole
-      node). Leave blank if requesting full node.
-    min: 0
-    max: 28
+      Number of cores per node.
+    min: 1
+    max: 48
     step: 1
-  bc_num_slots: "1"
-  bc_vnc_resolution:
-    required: true
-  account:
-    label: "Project"
-    widget: select
-    options:
-      <%- groups.each do |group| %>
-      - "<%= group %>"
-      <%- end %>
-  node_type:
-      widget: select
-      label: "Node type"
-      help: |
-        - **Standard Compute** <br>
-          These are standard HPC machines. Owens has 648 of these nodes with 40
-          cores and 128 GB of memory. Pitzer has 224 of these nodes with 40 cores and
-          340 of these nodes with 48 cores. All pitzer nodes have 192 GB of RAM. Chosing "any" as the node type will decrease
-          your wait time.
-        - **GPU Enabled** <br>
-          These are HPC machines with GPUs. Owens has 160 nodes with 1 [NVIDIA Tesla P100 GPU]
-          and Pitzer has 74 nodes with 2 [NVIDIA Tesla V100 GPUs]. They have the same
-          CPU and memory characteristics of standard compute. However, Pitzer's 40 core machines
-          have 2 GPUs with 16 GB of RAM; and Pitzer's 48 core machines have 2 GPUs with 32 GB of RAM.
-          Dense GPU types have 4 GPUs with 16 GB of RAM.
-        - **Large Memory** <br>
-          These are HPC machines with very large amounts of memory. Owens has 16 hugemem nodes
-          with 48 cores and 1.5 TB of RAM. Pitzer has 4 hugemem nodes with 3 TB of RAM and 80 cores.
-          Pitzer also has 12 Largmem nodes which have 48 cores with 768 GB of RAM.
+    id: 'num_cores'
 
-        [NVIDIA Tesla P100 GPU]: http://www.nvidia.com/object/tesla-p100.html
-        [NVIDIA Tesla V100 GPUs]: https://www.nvidia.com/en-us/data-center/v100/
-      options:
-        - [
-            "any",     "any",
-            data-max-num-cores-for-cluster-owens: 28,
-            data-max-num-cores-for-cluster-pitzer: 48,
-          ]
-        - [
-            "48 core",     "any-48core",
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-owens: false,
-          ]
-        - [
-            "any gpu",     "gpu",
-            data-max-num-cores-for-cluster-owens: 28,
-            data-max-num-cores-for-cluster-pitzer: 48,
-          ]
-        - [
-            "48 core gpu",     "gpu-48core",
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-owens: false,
-          ]
-        - [
-            "largemem", "largemem",
-            data-min-num-cores-for-cluster-pitzer: 24,
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-owens: false,
-          ]
-        - [
-            "hugemem", "hugemem",
-            data-min-num-cores-for-cluster-owens: 4,
-            data-max-num-cores-for-cluster-owens: 48,
-            data-min-num-cores-for-cluster-pitzer: 20,
-            data-max-num-cores-for-cluster-pitzer: 80,
-          ]
-        - [
-            "debug",   "debug",
-            data-max-num-cores-for-cluster-owens: 28,
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-owens: false,
-            data-option-for-cluster-pitzer: false,
-          ]
-  version:
-    widget: select
-    label: "MATLAB version"
-    help: "This defines the version of MATLAB you want to load."
-    options:
-      - [ 
-          "R2022a", "matlab/r2022a",           
-        ]    
-      - [ 
-          "R2020a", "matlab/r2020a",           
-        ]    
-      - [ 
-          "R2019b", "matlab/r2019b",           
-        ]    
-      - [ 
-          "R2019a", "matlab/r2019a",           
-          data-option-for-cluster-owens: false,
-        ]    
-      - [ 
-          "R2018b", "matlab/r2018b" 
-        ]
-      - [ 
-          "R2018a", "matlab/r2018a" 
-        ]
-      - [ 
-          "R2017a", "matlab/r2017a",
-          data-option-for-cluster-pitzer: false, 
-        ]
-      - [ 
-          "R2016b", "matlab/r2016b",
-          data-option-for-cluster-pitzer: false,
-        ]
-      - [ 
-          "R2015b", "matlab/r2015b" ,
-          data-option-for-cluster-pitzer: false,
-        ]
+  number_of_nodes:
+    widget: "number_field"
+    label: "Number of nodes"
+    value: 1
+    help: |
+      Number of nodes.
+    min: 0
+    max: 4
+    step: 1
+    id: 'number_of_nodes'
+
+  memory_per_node:
+    widget: "number_field"
+    label: "Amount of memory in GB"
+    value: 5
+    help: |
+      Amount of memory in GB.
+    min: 0
+    max: 250
+    step: 1
+    id: 'memory_per_node'
+
+  raw_data:
+    label: "Account associations for use by JavaScript"
+    widget: hidden_field
+    value: "<%= raw_data %>"
+    cacheable: false
