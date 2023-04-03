@@ -7,5 +7,8 @@ description: |
   This app will launch a [MATLAB] GUI on the [Quest cluster]. You will be able
   to interact with the MATLAB GUI through a VNC session.
 
+  Please see [Using Matlab on Quest] for more information about Matlab on HPC.
+
   [MATLAB]: https://www.mathworks.com/products/matlab.html
   [Quest cluster]: https://www.it.northwestern.edu/departments/it-services-support/research/computing/quest/index.html
+  [Using Matlab on Quest]: https://services.northwestern.edu/TDClient/30/Portal/KB/ArticleDet?ID=1548

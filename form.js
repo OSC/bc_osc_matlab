@@ -29,8 +29,31 @@ function get_associations() {
         assocs.push({ partition: 'long', account});
         assocs.push({ partition: 'gengpu', account});
         assocs.push({ partition: 'genhimem', account});
-    } else if (qos_list.includes("buyin")) {
+    } else if (qos_list.includes("buyin") && !account.includes("b1042") && !account.includes("b1094") && !account.includes("b1095") && !account.includes("b1119") && !account.includes("b1026")) {
         assocs.push({ partition: account, account });
+    }
+    if (account.includes("a9009")) {
+        assocs.push({ partition: "all", account });
+    } else if (account.includes("b1042")) {
+        assocs.push({ partition: "genomics", account });
+        assocs.push({ partition: "genomicslong", account });
+        assocs.push({ partition: "genomics-gpu", account });
+        assocs.push({ partition: "genomics-himem", account });
+    } else if (account.includes("b1026")) {
+        assocs.push({ partition: "cosmoshimem", account });  
+        assocs.push({ partition: "cosmoscompute", account });
+    } else if (account.includes("b1094")) { 
+        assocs.push({ partition: "ciera-std", account }); 
+        assocs.push({ partition: "ciera-gpu", account });
+        assocs.push({ partition: "ciera-specialist", account });
+    } else if (account.includes("b1095")) { 
+        assocs.push({ partition: "grail-std", account });
+        assocs.push({ partition: "grail-ligo", account });
+        assocs.push({ partition: "grail-specialist", account });
+    } else if (account.includes("b1119")) { 
+        assocs.push({ partition: "posydon-std", account }); 
+        assocs.push({ partition: "posydon-priority", account });
+        assocs.push({ partition: "posydon-long", account });
     }
   }
   return assocs;
@@ -51,7 +74,8 @@ function replace_options($select, new_options) {
 function toggle_gres_value_field_visibility() {
   let slurm_partition = $("#batch_connect_session_context_slurm_partition");
   let gpu_partitions = [
-    'gengpu'
+    'gengpu',
+    'all'
   ];
 
   toggle_visibility_of_form_group(
