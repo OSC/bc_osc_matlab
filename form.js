@@ -46,6 +46,7 @@ function get_associations() {
         assocs.push({ partition: "ciera-std", account }); 
         assocs.push({ partition: "ciera-gpu", account });
         assocs.push({ partition: "ciera-specialist", account });
+        assocs.push({ partition: "ciera-himem", account });
     } else if (account.includes("b1095")) { 
         assocs.push({ partition: "grail-std", account });
         assocs.push({ partition: "grail-ligo", account });
@@ -75,6 +76,15 @@ function toggle_gres_value_field_visibility() {
   let slurm_partition = $("#batch_connect_session_context_slurm_partition");
   let gpu_partitions = [
     'gengpu',
+    'gpu-benchmark',
+    'b1028',
+    'b1030',
+    'genomics-gpu',
+    'genomicsguest-gpu',
+    'ciera-gpu',
+    'b1105',
+    'b1164',
+    'b1171',
     'all'
   ];
 
@@ -91,8 +101,63 @@ function set_available_accounts() {
   replace_options($("#batch_connect_session_context_slurm_account"), accounts);
 }
 
+function set_min_max() {
+  const selected_partition = $("#batch_connect_session_context_slurm_partition").val();
+
+  if (selected_partition.includes("short")) {
+    $("#batch_connect_session_context_bc_num_hours").attr({
+       "max" : 4,
+       "min" : 1,
+    });
+  } else if (selected_partition.includes("normal")) {
+    $("#batch_connect_session_context_bc_num_hours").attr({
+       "max" : 48,
+       "min" : 4,
+    });
+  } else if (selected_partition.includes("long")) {
+    $("#batch_connect_session_context_bc_num_hours").attr({
+       "max" : 168,
+       "min" : 48,
+    });
+  } else if (selected_partition.includes("genhimem")) {
+    $("#batch_connect_session_context_bc_num_hours").attr({
+       "max" : 48,
+       "min" : 1,
+    });
+  } else if (selected_partition.includes("gengpu")) {
+    $("#batch_connect_session_context_bc_num_hours").attr({
+       "max" : 48,
+       "min" : 1,
+    });
+  } else {
+    $("#batch_connect_session_context_bc_num_hours").attr({
+       "max" : "",
+       "min" : 1,
+    });
+  } 
+
+  let himem_partitions = ['genhimem','cosmoscompute','cosmoshimem','b1041','genomics-himem','b1048','b1054','b1057','b1090','ciera-himem','b1132','b1134','b1140','b1167']
+
+  if (himem_partitions.includes(selected_partition)) {
+    $("#memory_per_node").attr({
+       "max" : 1479,
+       "min" : 1,
+    });
+  } else {
+    $("#memory_per_node").attr({
+       "max" : 243,
+       "min" : 1,
+    });
+  }
+
+}
+
 function update_available_options() {
   set_available_accounts();
+}
+
+function update_min_max() {
+  set_min_max();
 }
 
 /**
@@ -103,6 +168,7 @@ function set_slurm_partition_change_handler() {
   slurm_partition.change(() => {
     toggle_gres_value_field_visibility();
     update_available_options();
+    update_min_max();
   });
 }
 
