@@ -21,7 +21,7 @@ batch_connect:
     export container_image=/software/openondemand/matlab/matlab-ood.sif
 
     # All our software in /software so have to bind that
-    export SING_BINDS="--bind /software:/software"
+    export SING_BINDS="--bind /software:/software --bind /hpc/software:/hpc/software"
 
     ## bind some extra stuff to be able to talk to slurm from within the container
     export SING_BINDS="$SING_BINDS -B /etc/passwd -B /etc/slurm -B `which sbatch ` -B `which srun ` -B `which sacct ` -B `which scontrol ` -B `which salloc ` -B /usr/lib64/slurm/ -B /usr/lib64/libmunge.so.2 -B /usr/lib64/libmunge.so.2.0.0 "
