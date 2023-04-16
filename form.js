@@ -18,43 +18,65 @@ function toggle_visibility_of_form_group(form_id, show) {
   }
 }
 
+function convert_timelimit(TIMELIMIT) {
+    const time_split = TIMELIMIT.split(/[-:]/).map(Number);
+    var time_in_hours = 0;
+    if (time_split.length === 3) {
+        time_in_hours = time_split[0] + time_split[1]/60 + time_split[2]/3600
+    } else if (time_split.length === 4) {
+        time_in_hours = time_split[0] * 24 + time_split[1] + time_split[2]/60 + time_split[3]/3600
+    }
+    return time_in_hours
+}
+
+
+function convert_gpu_partitions(GRES) {
+    const gpu_options = [];
+    if (GRES.length !== 0) {
+        for (const ind_gres of GRES) {
+            const gpu_info = ind_gres.split(':');
+            for (let i = 1; i <= Number(gpu_info.slice(-1)); i++) {
+                gpu_options.push([gpu_info[0], gpu_info[1], i].join(':'));
+            }
+        }
+    }
+    return [...new Set(gpu_options)]
+}
+
 function get_associations() {
   const raw_data = $('#batch_connect_session_context_raw_data').val();
+  const raw_groups_data = $('#batch_connect_session_context_raw_group_data').val().split(",").filter(x => x);
+  const general_access_allocations = raw_groups_data.filter(x => x.includes("p"))
   const assocs = [];
+  // Obtain all unique partition and allocation combinations
   for (const assoc of raw_data.split(" ").filter(x => x)) {
-    const [account, qos_list] = assoc.split("|");
-    if (qos_list.includes("normal")) {
-        assocs.push({ partition: 'short', account});
-        assocs.push({ partition: 'normal', account});
-        assocs.push({ partition: 'long', account});
-        assocs.push({ partition: 'gengpu', account});
-        assocs.push({ partition: 'genhimem', account});
-    } else if (qos_list.includes("buyin") && !account.includes("b1042") && !account.includes("b1094") && !account.includes("b1095") && !account.includes("b1119") && !account.includes("b1026")) {
-        assocs.push({ partition: account, account });
-    }
-    if (account.includes("a9009")) {
-        assocs.push({ partition: "all", account });
-    } else if (account.includes("b1042")) {
-        assocs.push({ partition: "genomics", account });
-        assocs.push({ partition: "genomicslong", account });
-        assocs.push({ partition: "genomics-gpu", account });
-        assocs.push({ partition: "genomics-himem", account });
-    } else if (account.includes("b1026")) {
-        assocs.push({ partition: "cosmoshimem", account });  
-        assocs.push({ partition: "cosmoscompute", account });
-    } else if (account.includes("b1094")) { 
-        assocs.push({ partition: "ciera-std", account }); 
-        assocs.push({ partition: "ciera-gpu", account });
-        assocs.push({ partition: "ciera-specialist", account });
-        assocs.push({ partition: "ciera-himem", account });
-    } else if (account.includes("b1095")) { 
-        assocs.push({ partition: "grail-std", account });
-        assocs.push({ partition: "grail-ligo", account });
-        assocs.push({ partition: "grail-specialist", account });
-    } else if (account.includes("b1119")) { 
-        assocs.push({ partition: "posydon-std", account }); 
-        assocs.push({ partition: "posydon-priority", account });
-        assocs.push({ partition: "posydon-long", account });
+    const [PARTITION, GROUPS, TIMELIMIT, GRES, MEMORY, CPUS] = assoc.split("|");
+    const groups = raw_groups_data.filter(value => GROUPS.includes(value));
+    if (PARTITION.includes("a9009")) {
+        assocs.push({ partition: PARTITION,
+                      account: "a9009",
+                      maxtime : convert_timelimit(TIMELIMIT),
+                      gpus: GRES,
+                      max_mem: MEMORY,
+                      max_cpus: CPUS});
+    } else if (GROUPS.includes("all") && (general_access_allocations.length !== 0)) {
+        for (let gen_access of general_access_allocations) {
+            assocs.push({ partition: PARTITION.replace('*', ''),
+                          account: gen_access,
+                          maxtime : convert_timelimit(TIMELIMIT),
+                          gpus: GRES,
+                          max_mem: MEMORY,
+                          max_cpus: CPUS});
+        }
+    } else if (groups.length !== 0) {
+        for (const group of groups) {
+            assocs.push({ partition: PARTITION,
+                          account: group,
+                          maxtime : convert_timelimit(TIMELIMIT),
+                          gpus: GRES,
+                          max_mem: MEMORY,
+                          max_cpus: CPUS});
+        }
     }
   }
   return assocs;
@@ -72,75 +94,50 @@ function replace_options($select, new_options) {
 /**
  *  Toggle the visibility of the GRES Value field
  */
-function toggle_gres_value_field_visibility() {
-  let slurm_partition = $("#batch_connect_session_context_slurm_partition");
-  let gpu_partitions = [
-    'gengpu',
-    'gpu-benchmark',
-    'b1028',
-    'b1030',
-    'genomics-gpu',
-    'genomicsguest-gpu',
-    'ciera-gpu',
-    'b1105',
-    'b1164',
-    'b1171',
-    'all'
-  ];
-
+function toggle_gres_value_field_visibility(assocs) {
+  const gpu_partitions = [...new Set((assocs.filter(({ gpus }) => gpus !== "(null)")).map(({ gpus }) => gpus))];
+  
   toggle_visibility_of_form_group(
     '#batch_connect_session_context_gres_value',
-    gpu_partitions.includes(slurm_partition.val()));
+    gpu_partitions.length !== 0);
+
+  replace_options($("#batch_connect_session_context_gres_value"), convert_gpu_partitions(gpu_partitions));
+}
+
+function toggle_number_of_nodes_visibility() {
+  toggle_visibility_of_form_group(
+    '#number_of_nodes',
+    $("#batch_connect_session_context_request_more_than_one_node").is(':checked'));
 }
 
 function set_available_accounts() {
   let assocs = get_associations();
   const selected_partition = $("#batch_connect_session_context_slurm_partition").val();
   assocs = assocs.filter(({ partition }) => partition === selected_partition);
-  const accounts = assocs.map(({ account }) => account);
+  const accounts = [...new Set(assocs.map(({ account }) => account))];
   replace_options($("#batch_connect_session_context_slurm_account"), accounts);
+  return assocs
 }
 
-function set_min_max() {
-  const selected_partition = $("#batch_connect_session_context_slurm_partition").val();
+function set_min_max(assocs) {
+  const max_walltime = [...new Set((assocs.map(({ maxtime }) => maxtime)))][0];
+  const max_mem = Number([...new Set((assocs.map(({ max_mem }) => max_mem)))][0].replace('+', ''));
 
-  if (selected_partition.includes("short")) {
-    $("#batch_connect_session_context_bc_num_hours").attr({
-       "max" : 4,
-       "min" : 1,
-    });
-  } else if (selected_partition.includes("normal")) {
-    $("#batch_connect_session_context_bc_num_hours").attr({
-       "max" : 48,
-       "min" : 4,
-    });
-  } else if (selected_partition.includes("long")) {
-    $("#batch_connect_session_context_bc_num_hours").attr({
-       "max" : 168,
-       "min" : 48,
-    });
-  } else if (selected_partition.includes("genhimem")) {
-    $("#batch_connect_session_context_bc_num_hours").attr({
-       "max" : 48,
-       "min" : 1,
-    });
-  } else if (selected_partition.includes("gengpu")) {
-    $("#batch_connect_session_context_bc_num_hours").attr({
-       "max" : 48,
-       "min" : 1,
-    });
-  } else {
+  if (max_walltime === 0) {
     $("#batch_connect_session_context_bc_num_hours").attr({
        "max" : "",
        "min" : 1,
     });
-  } 
+  } else {
+    $("#batch_connect_session_context_bc_num_hours").attr({
+       "max" : max_walltime,
+       "min" : 1,
+    });
+  };
 
-  let himem_partitions = ['genhimem','cosmoscompute','cosmoshimem','b1041','genomics-himem','b1048','b1054','b1057','b1090','ciera-himem','b1132','b1134','b1140','b1167']
-
-  if (himem_partitions.includes(selected_partition)) {
+  if (max_mem > 264000) {
     $("#memory_per_node").attr({
-       "max" : 1479,
+       "max" : 2000,
        "min" : 1,
     });
   } else {
@@ -153,11 +150,12 @@ function set_min_max() {
 }
 
 function update_available_options() {
-  set_available_accounts();
+  let assocs = set_available_accounts();
+  return assocs 
 }
 
-function update_min_max() {
-  set_min_max();
+function update_min_max(assocs) {
+  set_min_max(assocs);
 }
 
 /**
@@ -166,9 +164,16 @@ function update_min_max() {
 function set_slurm_partition_change_handler() {
   let slurm_partition = $("#batch_connect_session_context_slurm_partition");
   slurm_partition.change(() => {
-    toggle_gres_value_field_visibility();
-    update_available_options();
-    update_min_max();
+    let assocs = update_available_options();
+    toggle_gres_value_field_visibility(assocs);
+    update_min_max(assocs);
+  });
+}
+
+function set_more_than_one_node_change_handler() {
+  let request_more_than_one_node = $("#batch_connect_session_context_request_more_than_one_node");
+  request_more_than_one_node.click(() => {
+    toggle_number_of_nodes_visibility();
   });
 }
 
@@ -184,10 +189,7 @@ function set_slurm_account_change_handler() {
 
 function set_available_partitions() {
   const assocs = get_associations();
-  const allpartitions = [...new Set(assocs.map(({ partition }) => partition))];
-  // Skip on partition value of cortex as that is an obsolete partition now
-  const non_existent_partition = 'cortex';
-  const partitions = allpartitions.filter(partition => partition !== non_existent_partition);
+  const partitions = [...new Set(assocs.map(({ partition }) => partition))];
   replace_options($("#batch_connect_session_context_slurm_partition"), partitions);
 }
 
@@ -196,11 +198,14 @@ function set_available_partitions() {
  */
 $(document).ready(function() {
   set_available_partitions();
-  // Ensure that fields are shown or hidden based on what was set in the last session
-  toggle_gres_value_field_visibility();
   // Update available options appropriately
-  update_available_options();
+  let assocs = update_available_options();
+  // Ensure that fields are shown or hidden based on what was set in the last session
+  toggle_gres_value_field_visibility(assocs);
+  update_min_max(assocs);
+  toggle_number_of_nodes_visibility();
   set_slurm_partition_change_handler();
   set_slurm_account_change_handler();
+  set_more_than_one_node_change_handler();
 });
 

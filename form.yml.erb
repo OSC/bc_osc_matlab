@@ -2,7 +2,7 @@
 #
 # @note Used to define the submitted cluster, title, description, and
 <%-
-  cmd = "/usr/bin/sacctmgr show associations user=$USER -P -n format=account,qos"
+  cmd = "sinfo -o '%P|%g|%l|%G|%m|%c' --noheader"
   begin
     output, status = Open3.capture2e(cmd)
     if status.success?
@@ -14,6 +14,11 @@
     qos = []
     qerror = e.message.strip
   end
+
+  begin
+    output = Open3.pipeline_r("/usr/bin/sacctmgr show associations user=$USER -P -n format=account,qos", "grep -v expired", "awk -F '|' 'BEGIN { ORS=\",\" }; {print $1}'") {|o| p o.read }
+    groups = output
+  end
 -%>
 
 ---
@@ -21,6 +26,7 @@
 cluster: "quests"
 
 form:
+  # What version of R do you want to run
   - version
   - vnc_resolution
   - bc_vnc_resolution
@@ -32,6 +38,10 @@ form:
   - slurm_account
   # This allows a user to use more than 1 core
   - num_cores
+  # This checkbox is to encourage folks to consider before asking for more than 1 node
+  - request_more_than_one_node
+  # how many nodes do you want to request
+  - number_of_nodes
   # This allows a user to request RAM
   - memory_per_node
   # How many hours do you want to run this job for
@@ -40,8 +50,9 @@ form:
   - user_email
   # Name of the Slurm job
   - job_name
-  # this variable if for the JavaScript
+  # these variables are for the JavaScript
   - raw_data
+  - raw_group_data
 
 attributes:
   version:
@@ -83,7 +94,7 @@ attributes:
   bc_num_hours:
     label: "Wall Clock Time"
     help: |
-      The maximum number of hours the Matlab GUI will run for. You can always terminate your Matlab job early, but it will automatically be terminated by Slurm once the walltime is hit.
+      The maximum number of hours the Jupyter sessions will run for. You can always terminate your jupyter session early, but it will automatically be terminated by Slurm once the walltime is hit.
     value: 1
 
   slurm_partition: 
@@ -104,10 +115,6 @@ attributes:
       If you are submitting to `gengpu` the only option that you can select is `A100`.
     widget: select
     default: ""
-    options:
-      - [ "A100", "gpu:a100:1" ]
-      - [ "V100", "gpu:v100:1" ]
-      - [ "A30", "gpu:a30:1" ]
 
   num_cores:
     widget: "number_field"
@@ -120,12 +127,32 @@ attributes:
     step: 1
     id: 'num_cores'
 
+  request_more_than_one_node:
+    widget: "check_box"
+    label: "Request more than a single node"
+    help: |
+      Only check this box if you are confident that your application of choice can utilize CPUs across
+      more than one node. These applications/packages would include MPI4py, Dask, PySpark, etc.
+
+  number_of_nodes:
+    widget: "number_field"
+    label: "Number of nodes being requested."
+    value: 1
+    help: |
+      Number of nodes.
+    min: 1
+    step: 1
+    id: 'number_of_nodes'
+    help: |
+      A reminder to check that your application of choice can utilize CPUs across
+      more than one node. These applications/packages would include MPI4py, Dask, PySpark, etc.
+
   memory_per_node:
     widget: "number_field"
     label: "Total memory or RAM do you need in GB."
     value: 5
     help: |
-      How much total memory or RAM do you need in GB.
+      How much total memory/RAM do you need in GB.
     min: 1
     max: 243
     step: 1
@@ -140,4 +167,10 @@ attributes:
     label: "Account associations for use by JavaScript"
     widget: hidden_field
     value: "<%= raw_data %>"
+    cacheable: false
+
+  raw_group_data:
+    label: "linux groups for use by JavaScript"
+    widget: hidden_field
+    value: "<%= groups %>"
     cacheable: false
