@@ -1,27 +1,6 @@
 # Batch Connect app configuration file
 #
 # @note Used to define the submitted cluster, title, description, and
-<%-
-  cmd = "sinfo -o '%P|%g|%l|%G|%m|%c' --noheader"
-  begin
-    output, status = Open3.capture2e(cmd)
-    if status.success?
-      raw_data = output
-    else
-      raise output
-    end
-  rescue => e
-    qos = []
-    qerror = e.message.strip
-  end
-
-  begin
-    output = Open3.pipeline_r("/usr/bin/sacctmgr show associations user=$USER -P -n format=account,qos", "grep -v expired", "awk -F '|' 'BEGIN { ORS=\",\" }; {print $1}'") {|o| p o.read }
-    groups = output
-  end
--%>
-
----
 
 cluster: "quests"
 
@@ -166,12 +145,11 @@ attributes:
   raw_data:
     label: "Account associations for use by JavaScript"
     widget: hidden_field
-    value: "<%= raw_data %>"
+    value: "<%= RawSlurmData.rawdata %>"
     cacheable: false
 
   raw_group_data:
     label: "linux groups for use by JavaScript"
     widget: hidden_field
-    value: "<%= groups %>"
+    value: "<%= RawSlurmData.rawgroupdata %>"
     cacheable: false
-
