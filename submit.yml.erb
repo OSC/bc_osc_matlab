@@ -1,5 +1,5 @@
 <%
-  groups = OodSupport::User.new.groups.map(&:name).select { |word| word.start_with?('p', 'b', 'a') }
+  groups = OodSupport::User.new.groups.map(&:name).drop(1)
 
   # your image location will differ
   ppn = num_cores.blank? ? 1 : num_cores.to_i
@@ -30,11 +30,11 @@ batch_connect:
     export SING_BINDS="$SING_BINDS <%= groups.include?('kellogg') ? "--bind /kellogg/:/kellogg/" : "" %>"
 
     # only bind /scratch/<netid> if individual has a scratch space
-    export SING_BINDS="$SING_BINDS <%= File.exist?("/scratch/#{User.new.name}") ? "--bind /scratch/#{User.new.name}:/scratch/#{User.new.name}" : "" %>"
+    export SING_BINDS="$SING_BINDS <%= File.directory?("/scratch/#{User.new.name}") ? "--bind /scratch/#{User.new.name}:/scratch/#{User.new.name}" : "" %>"
 
     # Only bind projects directories that the user would have access to based on their unix groups
     <%- groups.each do |group| %>
-    export SING_BINDS="$SING_BINDS --bind /projects/<%= group %>:/projects/<%= group %>"
+    export SING_BINDS="$SING_BINDS <%= File.directory?("/projects/#{group}") ? "--bind /projects/#{group}:/projects/#{group}" : "" %>"
     <%- end %>
 
     # Need to add the --nv flag if we are running on a GPU
