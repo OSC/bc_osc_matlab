@@ -5,11 +5,10 @@
 cluster: "quests"
 
 form:
-  # What version of Matlab.
+  # What Matlab version do you want to use
   - version
-  - vnc_resolution
   # determines the size of your desktop window
-  - bc_vnc_resolution
+  - vnc_resolution
   # This allows the user to select which partition they submit to
   - slurm_partition
   # This allows a user to request a GPU
@@ -33,6 +32,7 @@ form:
   # these variables are for the JavaScript
   - raw_data
   - raw_group_data
+  - bc_vnc_resolution
 
 attributes:
   version:
@@ -63,6 +63,8 @@ attributes:
       - ["1280x960","1280x960"]
       - ["1024x768","1024x768"]
       - ["800x600","800x600"]
+    help: |
+      The resolution setting (in pixels width x height) for the VNC connection.
 
   bc_vnc_resolution:
     required: true
