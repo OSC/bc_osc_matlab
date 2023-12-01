@@ -52,14 +52,14 @@ function get_associations() {
   for (const assoc of raw_data.split(" ").filter(x => x)) {
     const [PARTITION, GROUPS, TIMELIMIT, GRES, MEMORY, CPUS] = assoc.split("|");
     const groups = raw_groups_data.filter(value => GROUPS.includes(value));
-    if (PARTITION.includes("a9009")) {
+    if (PARTITION.includes("a9009") && raw_groups_data.includes("a9009")) {
         assocs.push({ partition: PARTITION,
                       account: "a9009",
                       maxtime : convert_timelimit(TIMELIMIT),
                       gpus: GRES,
                       max_mem: MEMORY,
                       max_cpus: CPUS});
-    } else if (GROUPS.includes("all") && (general_access_allocations.length !== 0)) {
+    } else if (GROUPS.includes("all") && (general_access_allocations.length !== 0) && (PARTITION !== 'a9009') && (PARTITION !== 'buyin-dev')) {
         for (let gen_access of general_access_allocations) {
             assocs.push({ partition: PARTITION.replace('*', ''),
                           account: gen_access,
