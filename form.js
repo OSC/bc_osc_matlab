@@ -39,6 +39,7 @@ function convert_gpu_partitions(GRES) {
                 gpu_options.push([gpu_info[0], gpu_info[1], i].join(':'));
             }
         }
+        gpu_options.push('');
     }
     return [...new Set(gpu_options)]
 }
