@@ -4,6 +4,7 @@
   # your image location will differ
   ppn = num_cores.blank? ? 1 : num_cores.to_i
   walltime = (bc_num_hours.to_i * 60)
+  memory_per_cpu = (memory_per_node.to_f / ppn.to_f).ceil
 %>
 ---
 batch_connect:
@@ -24,7 +25,7 @@ batch_connect:
     export SING_BINDS="--bind /software:/software --bind /hpc/software:/hpc/software --bind /opt/intel:/opt/intel"
 
     ## bind some extra stuff to be able to talk to slurm from within the container
-    export SING_BINDS="$SING_BINDS -B /etc/passwd -B /etc/slurm -B `which sbatch ` -B `which srun ` -B `which sacct ` -B `which scontrol ` -B `which salloc ` -B /usr/lib64/slurm/ -B /usr/lib64/libmunge.so.2 -B /usr/lib64/libmunge.so.2.0.0 -B /usr/lib64/libpmi2.so -B /usr/lib64/libpmi2.so.0 -B /usr/lib64/libpmi2.so.0.0.0 -B /usr/lib64/libpmi.so -B /usr/lib64/libpmi.so.0 -B /usr/lib64/libpmi.so.0.0.0 -B /run"
+    export SING_BINDS="$SING_BINDS -B /etc/passwd -B /etc/slurm -B `which sbatch ` -B `which srun ` -B `which sacct ` -B `which scontrol ` -B `which salloc ` -B `which scancel ` -B `which squeue ` -B /usr/lib64/slurm/ -B /usr/lib64/libmunge.so.2 -B /usr/lib64/libmunge.so.2.0.0 -B /usr/lib64/libpmi2.so -B /usr/lib64/libpmi2.so.0 -B /usr/lib64/libpmi2.so.0.0.0 -B /usr/lib64/libpmi.so -B /usr/lib64/libpmi.so.0 -B /usr/lib64/libpmi.so.0.0.0 -B /run"
 
     ## bind some extra stuff to be able to talk to slurm from within the container
     export SING_BINDS="$SING_BINDS -B /usr/local/pmix -B /usr/local/hwloc -B /usr/local/ucx-1.13.0 -B /usr/local/ucx-1.10.0 -B /usr/local/ucx-1.8.1 -B /usr/local/spack -B /usr/local/spack_v20d1 -B /usr/local/libevent/ " 
@@ -79,8 +80,8 @@ script:
      - "--ntasks-per-node"
      - "<%= ppn %>"
      # How much memory
-     - "--mem"
-     - "<%= memory_per_node %>G"
+     - "--mem-per-cpu"
+     - "<%= memory_per_cpu %>G"
      # Job Name
      - "--job-name"
      - "<%= job_name %>"
