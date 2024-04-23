@@ -1,4 +1,8 @@
 <%-
+
+  err_msg = "You are not a member of the matlab group. Please email oschelp@osc.edu to request access to MATLAB."
+  raise(StandardError, err_msg) unless CurrentUser.group_names.include?('matlab')
+
   nodes = bc_num_slots.blank? ? 1 : bc_num_slots.to_i
 
   cores_lookup = {
