@@ -7,6 +7,8 @@ cluster: "quests"
 form:
   # What Matlab version do you want to use
   - version
+  # What other modules need to be in your RStudio Server environment
+  - other_modules
   # determines the size of your desktop window
   - vnc_resolution
   # This allows the user to select which partition they submit to
@@ -48,6 +50,13 @@ attributes:
       - [ "MATLAB-2018b", "matlab/r2018b" ]
       - [ "MATLAB-2018a", "matlab/r2018a" ]
       - [ "MATLAB-2017a", "matlab/r2017a" ]
+
+  other_modules:
+    label: "List of other modules you want to load into your Matlab environment."
+    display: true
+    help: |
+      Please provide a space separated list of additional modules that you would like to be loaded into your environment. For example, if you also wanted abaqus available in this Matlab Quest OnDemand environment, you could put `abaqus/2022`.
+    value: ""
 
   vnc_resolution:
     label: "Resolution"
