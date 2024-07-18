@@ -4,7 +4,7 @@
   # your image location will differ
   ppn = num_cores.blank? ? 1 : num_cores.to_i
   walltime = (bc_num_hours.to_i * 60)
-  memory_per_cpu = (memory_per_node.to_f / ppn.to_f).ceil
+  memory_per_cpu = ((memory_per_node.to_f / ppn.to_f) * 1024).floor
 %>
 ---
 batch_connect:
@@ -81,7 +81,7 @@ script:
      - "<%= ppn %>"
      # How much memory
      - "--mem-per-cpu"
-     - "<%= memory_per_cpu %>G"
+     - "<%= memory_per_cpu %>M"
      # Job Name
      - "--job-name"
      - "<%= job_name %>"
