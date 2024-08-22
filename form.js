@@ -136,6 +136,10 @@ function is_kellogg() {
     var gpu_options = [];
     $("#batch_connect_session_context_gres_value option").each(function(index, item) { gpu_options.push(item.value) });
     reverse_options($("#batch_connect_session_context_gres_value"), gpu_options.reverse());
+  } else {
+    toggle_visibility_of_form_group(
+      '#batch_connect_session_context_request_more_than_one_node',
+      true);
   }
 }
 
