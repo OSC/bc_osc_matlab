@@ -51,7 +51,7 @@ function get_associations() {
   const assocs = [];
   // Obtain all unique partition and allocation combinations
   for (const assoc of raw_data.split(" ").filter(x => x)) {
-    const [PARTITION, GROUPS, TIMELIMIT, GRES, MEMORY, CPUS] = assoc.split("|");
+    const [PARTITION, GROUPS, TIMELIMIT, GRES, MEMORY, CPUS, FEATURE] = assoc.split("|");
     const groups = raw_groups_data.filter(value => GROUPS.includes(value));
     if (PARTITION.includes("a9009") && raw_groups_data.includes("a9009")) {
         assocs.push({ partition: PARTITION,
@@ -59,7 +59,8 @@ function get_associations() {
                       maxtime : convert_timelimit(TIMELIMIT),
                       gpus: GRES,
                       max_mem: MEMORY,
-                      max_cpus: CPUS});
+                      max_cpus: CPUS,
+                      feature: FEATURE});
     } else if (GROUPS.includes("all") && (general_access_allocations.length !== 0) && (PARTITION !== 'a9009') && (PARTITION !== 'buyin-dev')) {
         for (let gen_access of general_access_allocations) {
             assocs.push({ partition: PARTITION.replace('*', ''),
@@ -67,7 +68,8 @@ function get_associations() {
                           maxtime : convert_timelimit(TIMELIMIT),
                           gpus: GRES,
                           max_mem: MEMORY,
-                          max_cpus: CPUS});
+                          max_cpus: CPUS,
+                          feature: FEATURE});
         }
     } else if (groups.length !== 0) {
         for (const group of groups) {
@@ -76,7 +78,8 @@ function get_associations() {
                           maxtime : convert_timelimit(TIMELIMIT),
                           gpus: GRES,
                           max_mem: MEMORY,
-                          max_cpus: CPUS});
+                          max_cpus: CPUS,
+                          feature: FEATURE});
         }
     }
   }
@@ -93,6 +96,11 @@ function replace_options($select, new_options) {
   }
 }
 
+function reverse_options($select, new_options) {
+  $select.empty();
+  new_options.map(option => $select.append($("<option></option>").attr("value", option).text(option)));
+}
+
 /**
  *  Toggle the visibility of the GRES Value field
  */
@@ -104,6 +112,31 @@ function toggle_gres_value_field_visibility(assocs) {
     gpu_partitions.length !== 0);
 
   replace_options($("#batch_connect_session_context_gres_value"), convert_gpu_partitions(gpu_partitions));
+}
+
+/**
+ *  Toggle the visibility of the constraint value field
+ */
+function update_constraint_options(assocs) {
+  var constraints_with_commas = [...new Set(assocs.map(({ feature }) => feature))];
+  var constraints_without_commas = [""];
+  for (var constraint of constraints_with_commas) { constraints_without_commas.push(constraint.split(",")); }
+  replace_options($("#batch_connect_session_context_constraint"), [...new Set(constraints_without_commas.flat())]);
+}
+
+/**
+ *  If kellogg, set some things
+ */
+function is_kellogg() {
+  if ($("#batch_connect_session_context_slurm_partition").val() === 'kellogg') {
+    toggle_visibility_of_form_group(
+      '#batch_connect_session_context_request_more_than_one_node',
+      false);
+    $("#batch_connect_session_context_constraint").val("rhel8")
+    var gpu_options = [];
+    $("#batch_connect_session_context_gres_value option").each(function(index, item) { gpu_options.push(item.value) });
+    reverse_options($("#batch_connect_session_context_gres_value"), gpu_options.reverse());
+  }
 }
 
 function toggle_number_of_nodes_visibility() {
@@ -168,6 +201,8 @@ function set_slurm_partition_change_handler() {
   slurm_partition.change(() => {
     let assocs = update_available_options();
     toggle_gres_value_field_visibility(assocs);
+    update_constraint_options(assocs);
+    is_kellogg()
     update_min_max(assocs);
   });
 }
@@ -212,11 +247,14 @@ function collapse_help() {
  *  Install event handlers
  */
 $(document).ready(function() {
+  // This sets all of the Slurm partitions for this user
   set_available_partitions();
   // Update available options appropriately
   let assocs = update_available_options();
   // Ensure that fields are shown or hidden based on what was set in the last session
   toggle_gres_value_field_visibility(assocs);
+  update_constraint_options(assocs);
+  is_kellogg();
   update_min_max(assocs);
   toggle_number_of_nodes_visibility();
   set_slurm_partition_change_handler();

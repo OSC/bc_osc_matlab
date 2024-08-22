@@ -29,6 +29,8 @@ form:
   - bc_num_hours
   # User can supply e-mail if they would like to be e-mailed when the session begins
   - user_email
+  # Allow the user to provide a Slurm "constraint" option
+  - constraint
   # Name of the Slurm job
   - job_name
   # these variables are for the JavaScript
@@ -149,6 +151,12 @@ attributes:
     label: "Email Address (Optional)"
     help: |
       Enter your email address if you would like to receive an email when the session starts. Leave blank for no email.
+
+  constraint:
+    label: "Constraint (Optional)"
+    help: |
+      Not all Quest compute nodes are the same. We currently have four different generations or architectures of compute nodes which we refer to as quest9, quest10, quest11, and quest12. This will set the value of the `--constraint` flag for your job. For more information on setting the constraint option, please see the [constraint section](https://services.northwestern.edu/TDClient/30/Portal/KB/ArticleDet?ID=1964#section-constraints) of our Everything You Need to Know about Using Slurm on Quest page.
+    widget: "select"
 
   job_name:
     label: "Name of the Job"

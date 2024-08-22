@@ -95,3 +95,8 @@ script:
      - "--gres"
      - "<%= gres_value %>"
      <%- end %>
+     # If the user requested some kind of constraint, the apply that
+     <%- if constraint != "" %>
+     - "--constraint"
+     - "<%= constraint %>"
+     <%- end %>
