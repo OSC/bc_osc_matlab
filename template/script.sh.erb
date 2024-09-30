@@ -1,29 +1,56 @@
-#!/usr/bin/env bash
-
-source /hpc/software/spack_v20d1/spack/opt/spack/linux-rhel7-x86_64/gcc-4.8.5/lmod-8.7.24-ptfr7cudrme2v7y2nfktkkftnrgkezra/lmod/lmod/init/profile
-
-# Clean the environment
+#!/usr/bin/env bash 
+  
+# Clean the environment 
 module purge
 
-# Set working directory to home directory
+# Set working directory to HOME
 cd "${HOME}"
+
+# Get Details on the OS of the *container*
+source /etc/os-release
 
 #
 # Launch Xfce Window Manager and Panel
 #
-
-(
-  export SEND_256_COLORS_TO_REMOTE=1
-  export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
-  export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
-  export XDG_CACHE_HOME="$(mktemp -d)"
-  module restore
-  set -x
-  xfwm4 --compositor=off --daemon --sm-client-disable
-  xsetroot -solid "#D3D3D3"
-  xfsettingsd --sm-client-disable
-  xfce4-panel --sm-client-disable
-) &
+#
+if [[ "$ID_LIKE" =~ "fedora" ]]; then
+    if [[ "$VERSION_ID" < "8.0" ]]; then
+        (
+          export SEND_256_COLORS_TO_REMOTE=1
+          export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
+          export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
+          export XDG_CACHE_HOME="$(mktemp -d)"
+          module restore
+          set -x
+          xfwm4 --compositor=off --daemon --sm-client-disable
+          xsetroot -solid "#D3D3D3"
+          xfsettingsd --sm-client-disable
+          xfce4-panel --sm-client-disable
+        ) &
+    else
+        (
+          export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
+          export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
+          export XDG_CACHE_HOME="$(mktemp -d)"
+          eval $(dbus-launch --sh-syntax)
+          xfwm4 --compositor=off --sm-client-disable &
+          xsetroot -solid "#D3D3D3"
+          xfsettingsd --daemon --sm-client-disable
+          xfce4-panel --sm-client-disable
+        ) &
+    fi
+else
+    (
+      export XDG_CONFIG_HOME="<%= session.staged_root.join("config") %>"
+      export XDG_DATA_HOME="<%= session.staged_root.join("share") %>"
+      export XDG_CACHE_HOME="$(mktemp -d)"
+      eval $(dbus-launch --sh-syntax)
+      xfwm4 --compositor=off --sm-client-disable &
+      xsetroot -solid "#D3D3D3"
+      xfsettingsd --daemon --sm-client-disable
+      xfce4-panel --sm-client-disable
+    ) &
+fi
 
 #
 # Start MATLAB
@@ -37,3 +64,4 @@ module load <%= context.version %>
 module list
 set -x
 matlab -desktop
+
