@@ -182,7 +182,7 @@ function set_min_max(assocs) {
     });
   } else {
     $("#memory_per_node").attr({
-       "max" : 243,
+       "max" : 968,
        "min" : 1,
     });
   }
