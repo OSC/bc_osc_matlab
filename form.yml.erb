@@ -116,7 +116,7 @@ attributes:
     help: |
       The number of CPUs you want for this session. This will set the value of the `--ntasks-per-node` flag for your job. Please note that you likely do not need to request more than a single CPU unless you know that your application can be parallelized. Also, please note that the more cores requested, the longer the wait will be for the session to start. For more information on setting the number of cores, please see the [number of cores section](https://services.northwestern.edu/TDClient/30/Portal/KB/ArticleDet?ID=1964#section-number-of-cores) of our Everything You Need to Know about Using Slurm on Quest page.
     min: 1
-    max: 64
+    max: 128
     step: 1
     id: 'num_cores'
 
