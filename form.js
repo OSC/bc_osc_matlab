@@ -121,7 +121,7 @@ function update_constraint_options(assocs) {
   var constraints_with_commas = [...new Set(assocs.map(({ feature }) => feature))];
   var constraints_without_commas = [""];
   // Find all instances of quest10_rhel8 and quest13 and find and replace with "rhel8"
-  for (var constraint of constraints_with_commas) { constraints_without_commas.push(constraint.replace("quest10_rhel8", "rhel8").replace("quest13", "rhel8").split(",")); }
+  for (var constraint of constraints_with_commas) { constraints_without_commas.push(constraint.replace("quest10_rhel8", "quest13").split(",")); }
   replace_options($("#batch_connect_session_context_constraint"), [...new Set(constraints_without_commas.flat())]);
 }
 
