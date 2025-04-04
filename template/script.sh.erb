@@ -39,7 +39,7 @@ fi
 #
 
 # Load the required environment
-module load xalt/latest <%= context.auto_modules_matlab %>
+module load <%= context.auto_modules_matlab %>
 
 # Launch MATLAB
 <%- if gpu -%>
