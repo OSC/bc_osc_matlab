@@ -12,6 +12,8 @@ form:
   - bc_vnc_resolution
   - bc_email_on_started
 attributes:
+  auto_modules_matlab:
+    default: false
   num_cores:
     widget: "number_field"
     label: "Number of cores"
