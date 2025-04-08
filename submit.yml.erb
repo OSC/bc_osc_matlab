@@ -3,25 +3,8 @@
   err_msg = "You are not a member of the matlab group. Please email oschelp@osc.edu to request access to MATLAB."
   raise(StandardError, err_msg) unless CurrentUser.group_names.include?('matlab')
 
-  nodes = bc_num_slots.blank? ? 1 : bc_num_slots.to_i
-
-  cores_lookup = {
-      "hugemem" => {"pitzer" => "80", "owens" => "48"},
-      "largemem" => {"pitzer" => "48", "owens" => "28"},
-
-      "any" => {"pitzer" => "40", "owens" => "28"},
-      "gpu" => {"pitzer" => "48", "owens" => "28"},
-
-      "any-48core" => {"pitzer" => "48", "owens" => "28"},
-      "gpu-48core" => {"pitzer" => "48", "owens" => "28"},
-
-      "any-40core" => {"pitzer" => "40", "owens" => "28"},
-      "gpu-40core" => {"pitzer" => "40", "owens" => "28"},
-  }
-
-  max_cores = cores_lookup[node_type][cluster]
-  ppn = num_cores.blank? ? max_cores : num_cores.to_i
-
+  nodes = bc_num_slots.to_i
+  ppn = num_cores.to_i
 
   case node_type
   when "hugemem"
