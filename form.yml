@@ -1,6 +1,5 @@
 ---
 cluster:
-  - "owens"
   - "pitzer"
   - "cardinal"
 form:
@@ -13,14 +12,16 @@ form:
   - bc_vnc_resolution
   - bc_email_on_started
 attributes:
+  auto_modules_matlab:
+    default: false
   num_cores:
     widget: "number_field"
     label: "Number of cores"
     value: 1
     help: |
-      Number of cores on node type (4 GB per core unless requesting whole
-      node). Leave blank if requesting full node.
-    min: 0
+      The minimum and maximum will change based on your choice of cluster
+      and node type.
+    min: 1
     max: 28
     step: 1
   bc_num_slots: "1"
@@ -51,58 +52,57 @@ attributes:
       options:
         - [
             "any",     "any",
-            data-max-num-cores-for-cluster-owens: 28,
+            data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 48,
+            data-min-num-cores-for-cluster-cardinal: 1,
             data-max-num-cores-for-cluster-cardinal: 96,
           ]
         - [
             "48 core",     "any-48core",
+            data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-owens: false,
             data-option-for-cluster-cardinal: false,
           ]
         - [
             "40 core",     "any-40core",
+            data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 40,
-            data-option-for-cluster-owens: false,
             data-option-for-cluster-cardinal: false,
           ]
         - [
             "any gpu",     "gpu",
-            data-max-num-cores-for-cluster-owens: 28,
+            data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 48,
+            data-min-num-cores-for-cluster-cardinal: 1,
             data-max-num-cores-for-cluster-cardinal: 96,
           ]
         - [
             "40 core gpu",     "gpu-40core",
+            data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 40,
-            data-option-for-cluster-owens: false,
             data-option-for-cluster-cardinal: false,
           ]
         - [
             "48 core gpu",     "gpu-48core",
+            data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-owens: false,
             data-option-for-cluster-cardinal: false,
           ]
         - [
             "largemem", "largemem",
             data-min-num-cores-for-cluster-pitzer: 24,
             data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-owens: false,
             data-option-for-cluster-cardinal: false,
           ]
         - [
             "hugemem", "hugemem",
-            data-min-num-cores-for-cluster-owens: 4,
-            data-max-num-cores-for-cluster-owens: 48,
             data-min-num-cores-for-cluster-pitzer: 20,
             data-max-num-cores-for-cluster-pitzer: 80,
             data-option-for-cluster-cardinal: false,
           ]
         - [
             "debug",   "debug",
-            data-max-num-cores-for-cluster-owens: 28,
+            data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 48,
             data-option-for-cluster-owens: false,
             data-option-for-cluster-pitzer: false,
