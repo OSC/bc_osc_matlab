@@ -21,7 +21,7 @@ batch_connect:
     export container_image=/software/rhel8/quest_ondemand/desktops/xfce/quest-ood-xfce-desktop.sif
 
     # All our software in /software so have to bind that
-    export SING_BINDS="--bind /software:/software --bind /hpc/software:/hpc/software --bind /opt/intel:/opt/intel"
+    export SING_BINDS="--bind /gpfs/software:/gpfs/software --bind /software:/software --bind /hpc/software:/hpc/software --bind /opt/intel:/opt/intel"
 
     ## bind some extra stuff to be able to talk to slurm from within the container
     export SING_BINDS="$SING_BINDS -B /etc/slurm -B `which sbatch ` -B `which srun ` -B `which sacct ` -B `which scontrol ` -B `which salloc ` -B `which scancel ` -B `which squeue ` -B /usr/lib64/slurm/ -B /usr/lib64/libmunge.so.2 -B /usr/lib64/libmunge.so.2.0.0 -B /usr/lib64/libpmi2.so -B /usr/lib64/libpmi2.so.0 -B /usr/lib64/libpmi2.so.0.0.0 -B /usr/lib64/libpmi.so -B /usr/lib64/libpmi.so.0 -B /usr/lib64/libpmi.so.0.0.0 -B /run -B /usr/lib64/libnvidia-ml.so.1"
