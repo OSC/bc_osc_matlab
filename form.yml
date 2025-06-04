@@ -1,6 +1,7 @@
 ---
 cluster:
   - "pitzer"
+  - "pitzer-rhel9"
   - "cardinal"
 form:
   - auto_modules_matlab
@@ -54,6 +55,8 @@ attributes:
             "any",     "any",
             data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 48,
+            data-min-num-cores-for-cluster-pitzer-rhel9: 1,
+            data-max-num-cores-for-cluster-pitzer-rhel9: 48,
             data-min-num-cores-for-cluster-cardinal: 1,
             data-max-num-cores-for-cluster-cardinal: 96,
           ]
@@ -61,18 +64,24 @@ attributes:
             "48 core",     "any-48core",
             data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 48,
+            data-min-num-cores-for-cluster-pitzer-rhel9: 1,
+            data-max-num-cores-for-cluster-pitzer-rhel9: 48,
             data-option-for-cluster-cardinal: false,
           ]
         - [
             "40 core",     "any-40core",
             data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 40,
+            data-min-num-cores-for-cluster-pitzer-rhel9: 1,
+            data-max-num-cores-for-cluster-pitzer-rhel9: 40,
             data-option-for-cluster-cardinal: false,
           ]
         - [
             "any gpu",     "gpu",
             data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 48,
+            data-min-num-cores-for-cluster-pitzer-rhel9: 1,
+            data-max-num-cores-for-cluster-pitzer-rhel9: 48,
             data-min-num-cores-for-cluster-cardinal: 1,
             data-max-num-cores-for-cluster-cardinal: 96,
           ]
@@ -80,30 +89,40 @@ attributes:
             "40 core gpu",     "gpu-40core",
             data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 40,
+            data-min-num-cores-for-cluster-pitzer-rhel9: 1,
+            data-max-num-cores-for-cluster-pitzer-rhel9: 40,
             data-option-for-cluster-cardinal: false,
           ]
         - [
             "48 core gpu",     "gpu-48core",
             data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 48,
+            data-min-num-cores-for-cluster-pitzer-rhel9: 1,
+            data-max-num-cores-for-cluster-pitzer-rhel9: 48,
             data-option-for-cluster-cardinal: false,
           ]
         - [
             "largemem", "largemem",
             data-min-num-cores-for-cluster-pitzer: 24,
             data-max-num-cores-for-cluster-pitzer: 48,
+            data-min-num-cores-for-cluster-pitzer-rhel9: 24,
+            data-max-num-cores-for-cluster-pitzer-rhel9: 48,
             data-option-for-cluster-cardinal: false,
           ]
         - [
             "hugemem", "hugemem",
             data-min-num-cores-for-cluster-pitzer: 20,
             data-max-num-cores-for-cluster-pitzer: 80,
+            data-min-num-cores-for-cluster-pitzer-rhel9: 20,
+            data-max-num-cores-for-cluster-pitzer-rhel9: 48,
             data-option-for-cluster-cardinal: false,
           ]
         - [
             "debug",   "debug",
             data-min-num-cores-for-cluster-pitzer: 1,
             data-max-num-cores-for-cluster-pitzer: 48,
+            data-min-num-cores-for-cluster-pitzer-rhel9: 1,
+            data-max-num-cores-for-cluster-pitzer-rhel9: 48,
             data-option-for-cluster-owens: false,
             data-option-for-cluster-pitzer: false,
             data-option-for-cluster-cardinal: false,
