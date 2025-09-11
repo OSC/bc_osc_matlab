@@ -35,9 +35,18 @@ function convert_gpu_partitions(GRES) {
     if (GRES.length !== 0) {
         for (const ind_gres of GRES) {
             const gpu_info = ind_gres.split(':');
-            var number_of_gpus = Number(gpu_info[2].split("(")[0]);
-            for (let i = 1; i <= number_of_gpus; i++) {
-                gpu_options.push([gpu_info[0], gpu_info[1], i].join(':'));
+            if (gpu_info.length > 2){
+                var number_of_gpus = Number(gpu_info[2].split("(")[0]);
+
+                for (let i = 1; i <= number_of_gpus; i++) {
+                    // putting this in its own loop so the options display in a better order
+                    gpu_options.push([gpu_info[0], i].join(':'));
+                }
+
+                for (let i = 1; i <= number_of_gpus; i++) {
+                    // original code puts gpu:h100:i or gpu:a100:i
+                    gpu_options.push([gpu_info[0], gpu_info[1], i].join(':'));
+                }
             }
         }
         gpu_options.push('');
