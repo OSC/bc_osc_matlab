@@ -43,7 +43,7 @@ module load <%= context.auto_modules_matlab %>
 
 # Launch MATLAB
 <%- if gpu -%>
-module load intel/16.0.3 virtualgl
+module load intel/16.0.3 virtualgl/3.1.1
 module list
 set -x
 vglrun matlab -desktop -nosoftwareopengl
