@@ -3,32 +3,21 @@
   err_msg = "You are not a member of the matlab group. Please email oschelp@osc.edu to request access to MATLAB."
   raise(StandardError, err_msg) unless CurrentUser.group_names.include?('matlab')
 
-  nodes = bc_num_slots.to_i
-  ppn = num_cores.to_i
+  base_slurm_args = ["--nodes", "#{bc_num_slots.to_i}", "--ntasks-per-node", "#{num_cores.to_i}"]
 
-  case node_type
-  when "hugemem"
-    partition = bc_num_slots.to_i > 1 ? "hugemem-parallel" : "hugemem"
-    slurm_args = [ "--nodes", "#{nodes}", "--ntasks-per-node", "#{ppn}", "--partition", partition ]
-  when "gpu"
-    slurm_args = [ "--nodes", "#{nodes}", "--ntasks-per-node", "#{ppn}", "--gpus-per-node", "1" ]
-  when "any40-core"
-    slurm_args = [ "--nodes", "#{nodes}", "--ntasks-per-node", "#{ppn}", "--contstraint", "48core" ]
-  when "any48-core"
-    slurm_args = [ "--nodes", "#{nodes}", "--ntasks-per-node", "#{ppn}", "--contstraint", "48core" ]
-  when "gpu-48core"
-    slurm_args = [ "--nodes", "#{nodes}", "--ntasks-per-node", "#{ppn}", "--gpus-per-node", "1", "--constraint", "48core" ]
-  when "gpu-40core"
-    slurm_args = [ "--nodes", "#{nodes}", "--ntasks-per-node", "#{ppn}", "--gpus-per-node", "1", "--constraint", "40core" ]
-  else
-    slurm_args = [ "--nodes", "#{nodes}", "--ntasks-per-node", "#{ppn}" ]
-  end
+  # Remove cluster tag, e.g. pitzer-gpu-exp to gpu-exp
+  partition = node_type.split('-').drop(1).join('-')
+  slurm_args = base_slurm_args + ["--partition", partition]
+
 %>
 ---
 batch_connect:
   template: vnc
 script:
+  <%- if gpus.to_i > 0 -%>
+  gpus_per_node: <%= gpus %>
+  <%- end %>
   native:
   <%- slurm_args.each do |arg| %>
-    - "<%= arg %>"
+  - "<%= arg %>"
   <%- end %>
