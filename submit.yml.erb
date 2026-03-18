@@ -6,7 +6,7 @@
   base_slurm_args = ["--nodes", "#{bc_num_slots.to_i}", "--ntasks-per-node", "#{num_cores.to_i}"]
 
   # Remove cluster tag, e.g. pitzer-gpu-exp to gpu-exp
-  partition = node_type.split('-').drop(1).join('-')
+  partition = global_node_type.split('-').drop(1).join('-')
   slurm_args = base_slurm_args + ["--partition", partition]
 
 %>
