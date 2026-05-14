@@ -1,6 +1,7 @@
 ---
 cluster:
   - "pitzer"
+  - "ascend"
   - "cardinal"
 form:
   - auto_modules_matlab
@@ -25,7 +26,7 @@ attributes:
     label: "GPUs"
   global_node_type:
     help: |
-      The node type options change based on the selected cluster. To find more information about each node type for a specific cluster, please visit the batch limit rules pages for [Cardinal], [Ascend] and [Pitzer].
+      Node type options are cluster-dependent. To find more information about each node type for a specific cluster, please visit the batch limit rules pages for [Cardinal], [Ascend] and [Pitzer]. If your workload requires specific hardware, ensure you have selected the appropriate node type to match those requirements.
 
       [Cardinal]: https://www.osc.edu/resources/technical_support/supercomputers/cardinal/batch_limit_rules
       [Ascend]:  https://www.osc.edu/resources/technical_support/supercomputers/ascend/batch_limit_rules
