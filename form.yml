@@ -141,7 +141,7 @@ attributes:
         hide-num-cores-when-checked: true
         hide-mem-when-checked: false
   mem:
-    label: "Memory"
+    label: "Memory per node"
     widget: number_field
     hide_by_default: true
   job_type:
