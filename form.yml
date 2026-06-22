@@ -1,109 +1,184 @@
 ---
 cluster:
   - "pitzer"
+  - "ascend"
   - "cardinal"
 form:
   - auto_modules_matlab
   - auto_accounts
-  - bc_num_hours
+  - job_type
+  - enable_mem
   - bc_num_slots
   - num_cores
-  - node_type
+  - mem
+  - bc_num_hours
+  - gpus
+  - gpu_type
   - bc_vnc_resolution
   - bc_email_on_started
 attributes:
   auto_modules_matlab:
     default: false
-  num_cores:
-    widget: "number_field"
-    label: "Number of cores"
-    value: 1
-    help: |
-      The minimum and maximum will change based on your choice of cluster
-      and node type.
-    min: 1
-    max: 28
-    step: 1
-  bc_num_slots: "1"
   bc_vnc_resolution:
     required: true
-  node_type:
-      widget: select
-      label: "Node type"
-      help: |
-        - **Standard Compute** <br>
-          These are standard HPC machines. Owens has 648 of these nodes with 40
-          cores and 128 GB of memory. Pitzer has 224 of these nodes with 40 cores and
-          340 of these nodes with 48 cores. All pitzer nodes have 192 GB of RAM. Chosing "any" as the node type will decrease
-          your wait time.
-        - **GPU Enabled** <br>
-          These are HPC machines with GPUs. Owens has 160 nodes with 1 [NVIDIA Tesla P100 GPU]
-          and Pitzer has 74 nodes with 2 [NVIDIA Tesla V100 GPUs]. They have the same
-          CPU and memory characteristics of standard compute. However, Pitzer's 40 core machines
-          have 2 GPUs with 16 GB of RAM; and Pitzer's 48 core machines have 2 GPUs with 32 GB of RAM.
-          Dense GPU types have 4 GPUs with 16 GB of RAM.
-        - **Large Memory** <br>
-          These are HPC machines with very large amounts of memory. Owens has 16 hugemem nodes
-          with 48 cores and 1.5 TB of RAM. Pitzer has 4 hugemem nodes with 3 TB of RAM and 80 cores.
-          Pitzer also has 12 Largmem nodes which have 48 cores with 768 GB of RAM.
-
-        [NVIDIA Tesla P100 GPU]: http://www.nvidia.com/object/tesla-p100.html
-        [NVIDIA Tesla V100 GPUs]: https://www.nvidia.com/en-us/data-center/v100/
-      options:
-        - [
-            "any",     "any",
-            data-min-num-cores-for-cluster-pitzer: 1,
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-min-num-cores-for-cluster-cardinal: 1,
-            data-max-num-cores-for-cluster-cardinal: 96,
-          ]
-        - [
-            "48 core",     "any-48core",
-            data-min-num-cores-for-cluster-pitzer: 1,
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-cardinal: false,
-          ]
-        - [
-            "40 core",     "any-40core",
-            data-min-num-cores-for-cluster-pitzer: 1,
-            data-max-num-cores-for-cluster-pitzer: 40,
-            data-option-for-cluster-cardinal: false,
-          ]
-        - [
-            "any gpu",     "gpu",
-            data-min-num-cores-for-cluster-pitzer: 1,
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-min-num-cores-for-cluster-cardinal: 1,
-            data-max-num-cores-for-cluster-cardinal: 96,
-          ]
-        - [
-            "40 core gpu",     "gpu-40core",
-            data-min-num-cores-for-cluster-pitzer: 1,
-            data-max-num-cores-for-cluster-pitzer: 40,
-            data-option-for-cluster-cardinal: false,
-          ]
-        - [
-            "48 core gpu",     "gpu-48core",
-            data-min-num-cores-for-cluster-pitzer: 1,
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-cardinal: false,
-          ]
-        - [
-            "largemem", "largemem",
-            data-min-num-cores-for-cluster-pitzer: 24,
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-cardinal: false,
-          ]
-        - [
-            "hugemem", "hugemem",
-            data-min-num-cores-for-cluster-pitzer: 20,
-            data-max-num-cores-for-cluster-pitzer: 80,
-            data-option-for-cluster-cardinal: false,
-          ]
-        - [
-            "debug",   "debug",
-            data-min-num-cores-for-cluster-pitzer: 1,
-            data-max-num-cores-for-cluster-pitzer: 48,
-            data-option-for-cluster-owens: false,
-            data-option-for-cluster-cardinal: false,
-          ]
+  num_cores:
+    label: "Number of cores per node"
+    widget: number_field
+  gpus:
+    label: "GPUs"
+    widget: number_field
+  gpu_type:
+    label: "GPU types"
+    widget: select
+    options:
+    - - "H100 94GB"
+      - cardinal-gpu
+      - data-option-for-cluster-cardinal: true
+      - data-option-for-cluster-ascend: false
+      - data-option-for-cluster-pitzer: false
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 4
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 472
+      - data-set-bc-num-slots: 1
+      - data-min-bc-num-slots: 1
+      - data-max-bc-num-slots: 12
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 96
+    - - "A100 40GB"
+      - ascend-nextgen
+      - data-option-for-cluster-cardinal: false
+      - data-option-for-cluster-ascend: true
+      - data-option-for-cluster-pitzer: false
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 2
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 472
+      - data-set-bc-num-slots: 1
+      - data-min-bc-num-slots: 1
+      - data-max-bc-num-slots: 16
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 88
+    - - "A100 80GB"
+      - ascend-quad
+      - data-option-for-cluster-cardinal: false
+      - data-option-for-cluster-ascend: true
+      - data-option-for-cluster-pitzer: false
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 4
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 920
+      - data-set-bc-num-slots: 1
+      - data-min-bc-num-slots: 1
+      - data-max-bc-num-slots: 4
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 40
+    - - "V100 16GB"
+      - pitzer-gpu
+      - data-option-for-cluster-cardinal: false
+      - data-option-for-cluster-ascend: false
+      - data-option-for-cluster-pitzer: true
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 2
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 384
+      - data-set-bc-num-slots: 1
+      - data-min-bc-num-slots: 1
+      - data-max-bc-num-slots: 4
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 96
+    - - "V100 32GB"
+      - pitzer-gpu-exp
+      - data-option-for-cluster-cardinal: false
+      - data-option-for-cluster-ascend: false
+      - data-option-for-cluster-pitzer: true
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 2
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 384
+      - data-set-bc-num-slots: 1
+      - data-min-bc-num-slots: 1
+      - data-max-bc-num-slots: 6
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 48
+    - - "V100s 32GB (NVLink)"
+      - pitzer-gpu-quad
+      - data-option-for-cluster-cardinal: false
+      - data-option-for-cluster-ascend: false
+      - data-option-for-cluster-pitzer: true
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 4
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 768
+      - data-set-bc-num-slots: 1
+      - data-min-bc-num-slots: 1
+      - data-max-bc-num-slots: 1
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 48
+  enable_mem:
+    label: "Use memory instead of cores"
+    widget: check_box
+    html_options:
+      data:
+        hide-num-cores-when-checked: true
+        hide-mem-when-checked: false
+  mem:
+    label: "Memory"
+    widget: number_field
+    hide_by_default: true
+  job_type:
+    label: "Job type"
+    widget: select
+    options:
+    - - cpu
+      - cpu-batch
+      - data-hide-auto-modules-cuda: true
+      - data-set-auto-modules-cuda: ''
+      - data-set-enable-mem: 0
+      - data-hide-mem: true
+      - data-hide-gpu-type: true
+      - data-hide-gpus: true
+      - data-set-gpus: 0
+      - data-min-gpus: 0
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores-for-cluster-cardinal: 96
+      - data-max-num-cores-for-cluster-ascend: 118
+      - data-max-num-cores-for-cluster-pitzer: 48
+      - data-set-bc-num-slots: 1
+      - data-min-bc-num-slots: 1
+      - data-max-num-slots-for-cluster-cardinal: 96
+      - data-max-num-slots-or-cluster-ascend: 118
+      - data-max-num-slots-for-cluster-pitzer: 48
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-bc-mem-for-cluster-cardinal: 1860
+      - data-max-bc-mem-for-cluster-ascend: 920
+      - data-max-bc-mem-for-cluster-pitzer: 2988
+    - - gpu
+      - gpu-batch
+      - data-hide-auto-modules-cuda: false
+      - data-set-enable-mem: 0
+      - data-hide-mem: true
+      - data-hide-gpu-type: false
+      - data-hide-gpus: false
+      - data-set-gpus: 1
+      - data-min-gpus: 1
