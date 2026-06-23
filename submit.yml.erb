@@ -24,3 +24,7 @@ script:
   <%- slurm_args.each do |arg| %>
   - "<%= arg %>"
   <%- end %>
+  <%- if enable_mem.to_i == 1  -%>
+  - "--mem"
+  - "<%= mem.to_i%>G"
+  <%- end %>
