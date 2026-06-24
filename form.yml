@@ -8,12 +8,11 @@ form:
   - auto_accounts
   - job_type
   - enable_mem
-  - bc_num_slots
+  - bc_num_nodes
   - num_cores
   - mem
   - bc_num_hours
   - gpus
-  - enable_gpu_type
   - gpu_type
   - bc_vnc_resolution
   - bc_email_on_started
@@ -38,120 +37,6 @@ attributes:
     label: "Memory in GB"
     widget: number_field
     hide_by_default: true
-  enable_gpu_type:
-    label: "Select GPU type"
-    widget: check_box
-    hide_by_default: true
-    html_options:
-      data:
-        hide-gpu-type-when-checked: false
-  gpu_type:
-    label: "GPU types"
-    widget: select
-    hide_by_default: true
-    options:
-    - - "H100 94GB"
-      - cardinal-gpu
-      - data-option-for-cluster-cardinal: true
-      - data-option-for-cluster-ascend: false
-      - data-option-for-cluster-pitzer: false
-      - data-set-gpus: 1
-      - data-min-gpus: 1
-      - data-max-gpus: 4
-      - data-set-mem: 4
-      - data-min-mem: 4
-      - data-max-mem: 472
-      - data-set-bc-num-slots: 1
-      - data-min-bc-num-slots: 1
-      - data-max-bc-num-slots: 12
-      - data-set-num-cores: 1
-      - data-min-num-cores: 1
-      - data-max-num-cores: 96
-    - - "A100 40GB"
-      - ascend-nextgen
-      - data-option-for-cluster-cardinal: false
-      - data-option-for-cluster-ascend: true
-      - data-option-for-cluster-pitzer: false
-      - data-set-gpus: 1
-      - data-min-gpus: 1
-      - data-max-gpus: 2
-      - data-set-mem: 4
-      - data-min-mem: 4
-      - data-max-mem: 472
-      - data-set-bc-num-slots: 1
-      - data-min-bc-num-slots: 1
-      - data-max-bc-num-slots: 16
-      - data-set-num-cores: 1
-      - data-min-num-cores: 1
-      - data-max-num-cores: 88
-    - - "A100 80GB"
-      - ascend-quad
-      - data-option-for-cluster-cardinal: false
-      - data-option-for-cluster-ascend: true
-      - data-option-for-cluster-pitzer: false
-      - data-set-gpus: 1
-      - data-min-gpus: 1
-      - data-max-gpus: 4
-      - data-set-mem: 4
-      - data-min-mem: 4
-      - data-max-mem: 920
-      - data-set-bc-num-slots: 1
-      - data-min-bc-num-slots: 1
-      - data-max-bc-num-slots: 4
-      - data-set-num-cores: 1
-      - data-min-num-cores: 1
-      - data-max-num-cores: 40
-    - - "V100 16GB"
-      - pitzer-gpu
-      - data-option-for-cluster-cardinal: false
-      - data-option-for-cluster-ascend: false
-      - data-option-for-cluster-pitzer: true
-      - data-set-gpus: 1
-      - data-min-gpus: 1
-      - data-max-gpus: 2
-      - data-set-mem: 4
-      - data-min-mem: 4
-      - data-max-mem: 384
-      - data-set-bc-num-slots: 1
-      - data-min-bc-num-slots: 1
-      - data-max-bc-num-slots: 4
-      - data-set-num-cores: 1
-      - data-min-num-cores: 1
-      - data-max-num-cores: 96
-    - - "V100 32GB"
-      - pitzer-gpu-exp
-      - data-option-for-cluster-cardinal: false
-      - data-option-for-cluster-ascend: false
-      - data-option-for-cluster-pitzer: true
-      - data-set-gpus: 1
-      - data-min-gpus: 1
-      - data-max-gpus: 2
-      - data-set-mem: 4
-      - data-min-mem: 4
-      - data-max-mem: 384
-      - data-set-bc-num-slots: 1
-      - data-min-bc-num-slots: 1
-      - data-max-bc-num-slots: 6
-      - data-set-num-cores: 1
-      - data-min-num-cores: 1
-      - data-max-num-cores: 48
-    - - "V100s 32GB (NVLink)"
-      - pitzer-gpu-quad
-      - data-option-for-cluster-cardinal: false
-      - data-option-for-cluster-ascend: false
-      - data-option-for-cluster-pitzer: true
-      - data-set-gpus: 1
-      - data-min-gpus: 1
-      - data-max-gpus: 4
-      - data-set-mem: 4
-      - data-min-mem: 4
-      - data-max-mem: 768
-      - data-set-bc-num-slots: 1
-      - data-min-bc-num-slots: 1
-      - data-max-bc-num-slots: 1
-      - data-set-num-cores: 1
-      - data-min-num-cores: 1
-      - data-max-num-cores: 48
   job_type:
     label: "Job type"
     widget: select
@@ -162,53 +47,189 @@ attributes:
       - data-set-auto-modules-cuda: ''
       - data-set-enable-mem: 0
       - data-hide-mem: true
-      - data-set-enable-gpu-type: 0
-      - data-hide-enable-gpu-type: true
       - data-hide-gpu-type: true
       - data-hide-gpus: true
-      - data-set-gpus: 0
-      - data-min-gpus: 0
+      - data-set-bc-num-nodes: 1
+      - data-min-bc-num-nodes: 1
+      - data-max-bc-num-nodes-for-cluster-cardinal: 12
+      - data-max-bc-num-nodes-for-cluster-ascend: 16
+      - data-max-bc-num-nodes-for-cluster-pitzer: 36
       - data-set-num-cores: 1
       - data-min-num-cores: 1
       - data-max-num-cores-for-cluster-cardinal: 96
       - data-max-num-cores-for-cluster-ascend: 118
       - data-max-num-cores-for-cluster-pitzer: 48
-      - data-set-bc-num-slots: 1
-      - data-min-bc-num-slots: 1
-      - data-max-num-slots-for-cluster-cardinal: 12
-      - data-max-num-slots-or-cluster-ascend: 16
-      - data-max-num-slots-for-cluster-pitzer: 36
+      - data-set-gpus: 0
+      - data-min-gpus: 0
       - data-set-mem: 4
       - data-min-mem: 4
-      - data-max-bc-mem-for-cluster-cardinal: 1860
-      - data-max-bc-mem-for-cluster-ascend: 920
-      - data-max-bc-mem-for-cluster-pitzer: 2988
+      - data-max-mem-for-cluster-cardinal: 1860   # hugemem
+      - data-max-mem-for-cluster-ascend: 921      # quad
+      - data-max-mem-for-cluster-pitzer: 2988     # hugemem
     - - "GPU"
       - gpu-batch
       - data-hide-auto-modules-cuda: false
       - data-set-enable-mem: 0
       - data-hide-mem: true
-      - data-set-enable-gpu-type: 0
-      - data-hide-enable-gpu-type: false
-      - data-hide-gpu-type: true
+      - data-hide-gpu-type: false
       - data-hide-gpus: false
-      - data-set-gpus: 1
-      - data-min-gpus: 1
-      - data-max-gpus-for-cluster-cardinal: 4
-      - data-max-gpus-for-cluster-ascend: 4
-      - data-max-gpus-for-cluster-pitzer: 4
+      - data-set-bc-num-nodes: 1
+      - data-min-bc-num-nodes: 1
+      - data-max-bc-num-nodes-for-cluster-cardinal: 12
+      - data-max-bc-num-nodes-for-cluster-ascend: 16
+      - data-max-bc-num-nodes-for-cluster-pitzer: 6
       - data-set-num-cores: 1
       - data-min-num-cores: 1
       - data-max-num-cores-for-cluster-cardinal: 96
       - data-max-num-cores-for-cluster-ascend: 120
       - data-max-num-cores-for-cluster-pitzer: 48
-      - data-set-bc-num-slots: 1
-      - data-min-bc-num-slots: 1
-      - data-max-num-slots-for-cluster-cardinal: 12
-      - data-max-num-slots-or-cluster-ascend: 16
-      - data-max-num-slots-for-cluster-pitzer: 36
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus-for-cluster-cardinal: 4
+      - data-max-gpus-for-cluster-ascend: 4
+      - data-max-gpus-for-cluster-pitzer: 2
       - data-set-mem: 4
       - data-min-mem: 4
-      - data-max-bc-mem-for-cluster-cardinal: 1860
-      - data-max-bc-mem-for-cluster-ascend: 920
-      - data-max-bc-mem-for-cluster-pitzer: 2988
+      - data-max-mem-for-cluster-cardinal: 864   # gpu
+      - data-max-mem-for-cluster-ascend: 921     # quad
+      - data-max-mem-for-cluster-pitzer: 363     # gpu, gpu-exp
+  gpu_type:
+    label: "GPU types"
+    widget: select
+    options:
+    - - "H100 94GB"
+      - cardinal-gpu
+      - data-option-for-cluster-cardinal: true
+      - data-option-for-cluster-ascend: false
+      - data-option-for-cluster-pitzer: false
+      - data-set-bc-num-nodes: 1
+      - data-min-bc-num-nodes: 1
+      - data-max-bc-num-nodes: 12
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 96
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 4
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 864
+    - - "Any GPU"
+      - ascend-batch
+      - data-option-for-cluster-cardinal: false
+      - data-option-for-cluster-ascend: true
+      - data-option-for-cluster-pitzer: false
+      - data-set-bc-num-nodes: 1
+      - data-min-bc-num-nodes: 1
+      - data-max-bc-num-nodes: 16
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 120
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 4
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 921
+    - - "A100 40GB"
+      - ascend-nextgen
+      - data-option-for-cluster-cardinal: false
+      - data-option-for-cluster-ascend: true
+      - data-option-for-cluster-pitzer: false
+      - data-set-bc-num-nodes: 1
+      - data-min-bc-num-nodes: 1
+      - data-max-bc-num-nodes: 16
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 120
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 3
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 472
+    - - "A100 80GB"
+      - ascend-quad
+      - data-option-for-cluster-cardinal: false
+      - data-option-for-cluster-ascend: true
+      - data-option-for-cluster-pitzer: false
+      - data-set-bc-num-nodes: 1
+      - data-min-bc-num-nodes: 1
+      - data-max-bc-num-nodes: 4
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 88
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 4
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 921
+    - - "Any GPU"
+      - pitzer-batch
+      - data-option-for-cluster-cardinal: false
+      - data-option-for-cluster-ascend: false
+      - data-option-for-cluster-pitzer: true
+      - data-set-bc-num-nodes: 1
+      - data-min-bc-num-nodes: 1
+      - data-max-bc-num-nodes: 6
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 48
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 4
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 744
+    - - "V100 16GB"
+      - pitzer-gpu
+      - data-option-for-cluster-cardinal: false
+      - data-option-for-cluster-ascend: false
+      - data-option-for-cluster-pitzer: true
+      - data-set-bc-num-nodes: 1
+      - data-min-bc-num-nodes: 1
+      - data-max-bc-num-nodes: 4
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 40
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 2
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 363
+    - - "V100 32GB"
+      - pitzer-gpu-exp
+      - data-option-for-cluster-cardinal: false
+      - data-option-for-cluster-ascend: false
+      - data-option-for-cluster-pitzer: true
+      - data-set-bc-num-nodes: 1
+      - data-min-bc-num-nodes: 1
+      - data-max-bc-num-nodes: 6
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 48
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 2
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 363
+    - - "V100s 32GB (NVLink)"
+      - pitzer-gpu-quad
+      - data-option-for-cluster-cardinal: false
+      - data-option-for-cluster-ascend: false
+      - data-option-for-cluster-pitzer: true
+      - data-set-bc-num-nodes: 1
+      - data-min-bc-num-nodes: 1
+      - data-max-bc-num-nodes: 1
+      - data-set-num-cores: 1
+      - data-min-num-cores: 1
+      - data-max-num-cores: 48
+      - data-set-gpus: 1
+      - data-min-gpus: 1
+      - data-max-gpus: 4
+      - data-set-mem: 4
+      - data-min-mem: 4
+      - data-max-mem: 744
