@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-<%- gpu = context.job_type.include?("vis") -%>
+<%- gpu = context.global_job_type.include?("vis") -%>
 
 # Clean the environment
 module purge
