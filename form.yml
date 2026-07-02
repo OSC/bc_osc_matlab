@@ -14,6 +14,8 @@ form:
   - bc_num_hours
   - global_gpus
   - global_gpu_type
+  - auto_modules_cuda
+  - global_enable_debug
   - bc_vnc_resolution
   - bc_email_on_started
 attributes:

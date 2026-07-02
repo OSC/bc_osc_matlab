@@ -3,15 +3,6 @@
   err_msg = "You are not a member of the matlab group. Please email oschelp@osc.edu to request access to MATLAB."
   raise(StandardError, err_msg) unless CurrentUser.group_names.include?('matlab')
 
-  base_slurm_args = ["--nodes", "#{bc_num_nodes.to_i}", "--ntasks-per-node", "#{global_num_cores.to_i}"]
-
-  # Remove cluster tag, e.g. pitzer-gpu-exp to gpu-exp
-  partition = global_job_type.split('-').drop(1).join('-')
-  if gpus.to_i > 0
-    partition = global_gpu_type.split('-').drop(1).join('-')
-  end
-  slurm_args = base_slurm_args + ["--partition", partition]
-
 %>
 ---
 batch_connect:
@@ -21,8 +12,17 @@ script:
   gpus_per_node: <%= global_gpus %>
   <%- end %>
   native:
-  <%- slurm_args.each do |arg| %>
-  - "<%= arg %>"
+  - "--nodes"
+  - "<%= bc_num_nodes.to_i %>"
+  - "--ntasks-per-node"
+  - "<%= global_num_cores.to_i %>"
+  - "--partition"
+  <%- if global_enable_debug.to_i == 1 -%>
+  - "debug"
+  <%- elsif global_gpus.to_i > 0 -%>
+  - "<%= global_gpu_type.split('-').drop(1).join('-') %>"
+  <%- else %>
+  - "batch"
   <%- end %>
   <%- if global_enable_mem.to_i == 1  -%>
   - "--mem"
