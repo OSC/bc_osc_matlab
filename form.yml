@@ -13,8 +13,8 @@ form:
   - global_mem
   - bc_num_hours
   - global_gpus
+  - global_enable_vis
   - global_gpu_type
-  - auto_modules_cuda
   - global_enable_debug
   - bc_vnc_resolution
   - bc_email_on_started

@@ -28,3 +28,7 @@ script:
   - "--mem"
   - "<%= global_mem.to_i%>G"
   <%- end %>
+  <%- if global_enable_vis.to_i == 1 -%>
+  - "--gres"
+  - "vis"
+  <%- end %>
